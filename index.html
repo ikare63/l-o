@@ -65,6 +65,26 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
 .codeBox{margin-top:18px;padding-top:16px;border-top:1px solid #342b21}
 .linesPunishment{margin-top:12px;padding:14px;background:#120e0c;border:1px solid #663631;border-radius:12px}.linesPunishment strong{color:#ffc0b9}
 
+
+/* === v5 : audience, historique, lignes, mode discret, contrats post-octobre === */
+.kpis{grid-template-columns:repeat(5,1fr)}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:500px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.audienceBox{margin-top:12px;padding:13px 14px;border:1px solid #4a3b27;border-radius:14px;background:linear-gradient(145deg,#19140e,#100d0a)}
+.audienceBox h3{margin:0 0 6px;font:700 1rem Georgia,serif;color:#f4dfb0}.audienceBox p{margin:4px 0;color:#d8c9b4;line-height:1.45}
+.homeTimer{margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.homeTimer .miniTime{padding:6px 9px;border:1px solid #3f362b;border-radius:10px;background:#0d0c0a;font-variant-numeric:tabular-nums}.homeTimer .miniTime b{color:#c5e8ff}.homeTimer .miniLabel{color:#8da8b9;font-size:.75rem}
+.weeklyGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}@media(max-width:650px){.weeklyGrid{grid-template-columns:repeat(2,1fr)}}
+.weeklyStat{padding:10px;border:1px solid #3c3328;border-radius:11px;background:#100e0b;text-align:center}.weeklyStat b{display:block;color:var(--gold);font-size:1.12rem}.weeklyStat span{font-size:.72rem;color:#aa9b87}
+.backupReminder{margin-top:12px;border-left-color:#6b9fc4;background:#101820}.backupReminder.hidden{display:none}
+.historyList{display:grid;gap:10px;margin-top:12px}.historyItem{padding:12px;border:1px solid #3d3028;border-radius:12px;background:#120f0d}.historyHead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.historyHead strong{display:block}.historyMeta{font-size:.76rem;color:#a99985;margin-top:4px}.historyActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.statusBadge{display:inline-flex;padding:5px 8px;border-radius:999px;border:1px solid #514333;font-size:.72rem;white-space:nowrap}.statusBadge.pending{color:#ffd29a;border-color:#8c6531}.statusBadge.executed{color:#bfe3c5;border-color:#3f6847}.statusBadge.cancelled,.statusBadge.error{color:#c7bdaf;border-color:#60564b}.statusBadge.acquitted{color:#b9dcff;border-color:#486b82}
+.calendarIcons{font-size:.9rem;line-height:1.35;letter-spacing:.02em}
+.linesSheet{display:grid;gap:7px;margin-top:12px}.lineRow{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:center}.lineRow span{color:var(--gold);text-align:right;font-weight:800}.lineRow input{width:100%;border:1px solid #4b4031;background:#0f0d0a;color:#f7eddd;border-radius:9px;padding:9px 10px}.lineRow input.good{border-color:#52765b;background:#122017}.lineRow input.bad{border-color:#8a413c;background:#21110f}.lineProgress{margin-top:10px;color:#c9b99e;font-weight:700}
+.postHero{text-align:center;padding:22px}.postHero .postDay{font:700 clamp(3.6rem,14vw,7rem) Georgia,serif;color:var(--gold);line-height:.95}.postHero .postSub{color:#b8a994;margin-top:8px}.postTimer{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px auto 0;max-width:560px}.postTimer .timeUnit{padding:11px 6px}.postHistory{display:grid;gap:9px}.contractForm{max-width:520px;margin:0 auto}.dossierClosed{text-align:center}.dossierClosed .stamp{font-size:1.05rem}.verdict{margin:14px 0;padding:13px 15px;border-left:3px solid var(--gold);background:#130f0c;border-radius:10px;color:#e4d2b9;font:italic 1rem/1.55 Georgia,serif}
+.discreetToggle{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 12px;border:1px solid #3b3227;border-radius:12px;background:#12100d}.discreetToggle input{width:22px;height:22px}
+body.postOctober .tabBtn[data-tab="contract"],body.postOctober .tabBtn[data-tab="log"],body.postOctober .tabBtn[data-tab="court"],body.postOctober .tabBtn[data-tab="calendar"]{display:none}body.postOctober .tabsInner{grid-template-columns:repeat(2,1fr)}
+body.discreet .seal{border-color:#83909a;color:#b9c4cc}body.discreet .stamp{border-color:#83909a;color:#b9c4cc}
+
 </style>
 </head>
 <body>
@@ -95,8 +115,12 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
       <div class="kpi"><strong id="lockedDaysKpi">0</strong><span>jours suivis</span></div>
       <div class="kpi"><strong id="orgasmKpi">0</strong><span>orgasmes en cage</span></div>
       <div class="kpi"><strong id="deviationKpi">0</strong><span>écarts</span></div>
+      <div class="kpi"><strong id="streakKpi">0</strong><span>jours sans oubli</span></div>
     </div>
     <div class="notice" id="sanctionNotice">Aucune sanction en cours. Le dossier est, pour l’instant, étonnamment propre.</div>
+    <div class="audienceBox" id="dailyAudience"><h3>Audience du jour</h3><p>Le greffe prépare le dossier…</p></div>
+    <div class="homeTimer" id="homeCompactTimer"></div>
+    <div class="notice backupReminder hidden" id="backupReminderHome"></div>
     <div class="miniActions" aria-label="Actions rapides">
       <button class="btn small secondary" onclick="openCheckin()">✅ Check-in</button>
       <button class="btn small ghost" onclick="goTo('court')">⚖️ Tribunal</button>
@@ -120,6 +144,7 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
     <div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Préparation Locktober</h3><div class="prepList" id="prepList"></div></div>
     <div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Routine piscine & nettoyage</h3><div class="routine" id="routineBox"></div></div>
   </div>
+  <div class="card" id="weeklyCard"><h3 style="font-family:Georgia,serif;margin-top:0">Bilan hebdomadaire</h3><div id="weeklySummary"><span class="muted">Le premier bilan apparaîtra le dimanche 4 octobre.</span></div></div>
   <div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Derniers actes</h3><div class="timeline" id="recentEvents"></div></div>
 </section>
 <section class="tab" id="tab-contract">
@@ -167,6 +192,7 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
     <button class="btn danger" style="margin-top:12px" onclick="submitConfession()">Déposer ma confession</button>
   </div>
   <div id="tribunalSentence"></div>
+  <div class="card" style="margin-top:14px"><div class="eyebrow">Historique</div><h3 style="font-family:Georgia,serif">Registre du Tribunal</h3><div id="tribunalHistory" class="historyList"></div></div>
 </section>
 <section class="tab" id="tab-calendar">
   <div class="card tabIntro calendarIntro">
@@ -186,6 +212,7 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
   <div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Octobre 2026</h3><div class="calendar" id="calendar"></div></div>
 </section>
 <section class="tab" id="tab-settings"><div class="card tabIntro settingsIntro"><h2>⚙️ Réglages</h2><p>Identité du dossier, noms des cages, ton du notaire et sauvegardes locales.</p></div><div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Réglages</h3><label>Nom affiché</label><input id="displayName" type="text" value="Lénaïc"><label style="margin-top:12px">Nom de la cage normale</label><input id="normalCageName" type="text" value="Cage normale"><label style="margin-top:12px">Nom de la flat cage</label><input id="flatCageName" type="text" value="Flat cage"><label style="margin-top:12px">Mode notaire humiliant</label><select id="humiliationLevel"><option value="soft">Appuyé</option><option value="hard">Très humiliant</option></select>
+<div style="margin-top:16px" class="row"><div><label>Verrouillage automatique</label><select id="autoLockMinutes"><option value="0">Désactivé</option><option value="1">Après 1 minute</option><option value="2">Après 2 minutes</option><option value="5">Après 5 minutes</option><option value="10">Après 10 minutes</option><option value="15">Après 15 minutes</option><option value="30">Après 30 minutes</option><option value="60">Après 1 heure</option></select></div><div><label>Affichage</label><div class="discreetToggle"><span><strong>Mode discret</strong><br><span class="small muted">Intitulés neutres à l’écran</span></span><input id="discreetMode" type="checkbox"></div></div></div>
 <div class="codeBox">
   <h4 style="font-family:Georgia,serif;margin:.2rem 0 .5rem">Code d’accès local</h4>
   <p class="small muted">Le changement vaut sur ce navigateur/appareil. Sur un dépôt GitHub Pages public, cela ne remplace pas une vraie authentification.</p>
@@ -194,7 +221,7 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
   <button class="btn secondary" style="margin-top:10px" onclick="changeAccessCode()">Modifier le code</button>
   <div class="small muted" id="accessCodeState" style="margin-top:8px"></div>
 </div>
-<div class="miniActions" style="margin-top:12px"><button class="btn" onclick="saveSettings()">Enregistrer</button></div></div><div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Données locales</h3><div class="miniActions"><button class="btn secondary" onclick="exportData()">Exporter JSON</button><label class="btn ghost" style="display:inline-block">Importer JSON<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"></label><button class="btn danger" onclick="resetAll()">Tout effacer</button></div></div></section>
+<div class="miniActions" style="margin-top:12px"><button class="btn" onclick="saveSettings()">Enregistrer</button></div></div><div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Données locales</h3><div class="notice backupReminder hidden" id="backupReminderSettings"></div><div class="miniActions"><button class="btn secondary" onclick="exportData()">Exporter JSON</button><label class="btn ghost" style="display:inline-block">Importer JSON<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"></label><button class="btn danger" onclick="resetAll()">Tout effacer</button></div></div></section>
 </div>
 <nav class="tabs"><div class="tabsInner">
   <button class="tabBtn active" data-tab="home"><span>🏠</span>Accueil</button>
@@ -211,7 +238,7 @@ const STORAGE_KEY='locktober-os-v3';
 const ACCESS_HASH_KEY='locktober-access-hash';
 const ACCESS_SESSION_KEY='locktober-access-unlocked';
 const DEFAULT_ACCESS_HASH='d880a973';
-const defaultState={signature:null,prep:{shave:null,cageCleanedPrep:false,keyChecked:false,skinOk:false},checkins:[],deviations:[],safety:[],cleanings:[],sanction:null,settings:{displayName:'Lénaïc',normalCageName:'Cage normale',flatCageName:'Flat cage',humiliationLevel:'hard'}};
+const defaultState={createdAt:new Date().toISOString(),signature:null,prep:{shave:null,cageCleanedPrep:false,keyChecked:false,skinOk:false},checkins:[],deviations:[],safety:[],cleanings:[],poolVisits:[],sanction:null,contracts:[],activeContractId:null,finalViewed:false,meta:{dailyQuotes:{}},settings:{displayName:'Lénaïc',normalCageName:'Cage normale',flatCageName:'Flat cage',humiliationLevel:'hard',autoLockMinutes:5,discreetMode:false,lastExportAt:null}};
 const SANCTION_SCALE={
   missedCheckin:{label:'Check-in quotidien oublié',flat:false,hours:0,noPlay:0,text:'Lignes humiliantes : « Je n’oublierai pas mon check-in quotidien. »'},
   tamper:{label:'Manipulation / contournement de la cage',flat:false,hours:12,noPlay:12,text:'12 h sans jeu + confession au dossier.'},
@@ -222,7 +249,80 @@ const SANCTION_SCALE={
   dishonesty:{label:'Omission / fausse déclaration volontaire',flat:false,hours:24,noPlay:24,text:'24 h sans jeu + mention permanente de la fausse déclaration dans le journal.'},
   repeat:{label:'Récidive',flat:true,hours:72,noPlay:72,text:'72 h en flat cage + 72 h sans jeu.'}
 };
+
+const NOTARY_DAILY_BANK=[
+'Le dossier est à jour. Même votre petit zizi semble avoir compris qu’ici, on respecte les échéances.',
+'Check-in enregistré. Une formalité minuscule, ce qui devrait parler directement à votre zizi.',
+'Maître Verrou prend acte : aujourd’hui, le zizi n’a pas réussi à créer de paperasse supplémentaire.',
+'Une journée correctement consignée. Le zizi reste sous administration surveillée.',
+'Le greffe est propre. C’est déjà plus flatteur que la situation institutionnelle de votre zizi.',
+'Check-in reçu : le zizi n’obtient aucune remise de peine pour ponctualité.',
+'Tout est en ordre. Le zizi peut retourner à son rôle officiel : figurant administratif.',
+'Le greffe note une conduite convenable. N’en profitez pas pour donner de l’importance au zizi.',
+'Check-in conforme. Le zizi demeure un administré, pas une autorité.',
+'Dossier à jour : la paperasse se porte mieux que l’ego du zizi.',
+'Formalité accomplie. Le zizi reste sous le régime du « merci de ne rien décider ».',
+'Le check-in est parfaitement recevable. Le zizi n’a toujours aucune qualité pour agir.',
+'Tout est signé. Le zizi peut cesser d’espérer un amendement au règlement.',
+'Maître Verrou classe la journée sans incident. Le zizi, lui, reste classé sans suite.',
+'La ponctualité sauve la journée. Elle ne sauve pas la réputation du zizi.',
+'Greffe satisfait : une journée sans initiative intempestive du zizi.',
+'Check-in fait. Une victoire administrative, ce qui est déjà beaucoup pour une si petite affaire.',
+'Maître Verrou enregistre. Le zizi reste sous contrat et sous-estimé avec constance.',
+'Le dossier est régulier. Le zizi n’a pas été sollicité pour expertise.',
+'Une journée sans oubli. Le zizi peut garder son avis — il n’était pas demandé.',
+'Tout est conforme. La sanction du jour consiste simplement à rester très humble.',
+'Check-in validé. Aucun triomphalisme : il reste encore un zizi à garder sous contrôle.',
+'Le notaire approuve la régularité du jour. Aucun prestige supplémentaire n’est accordé au zizi.',
+'Une case cochée de plus. C’est probablement la seule chose qui avait besoin de grandir aujourd’hui.',
+'La procédure est respectée. Le zizi, lui, n’avait de toute façon pas beaucoup de marge de manœuvre.',
+'Aucun oubli aujourd’hui. C’est la preuve qu’au moins une petite chose est bien tenue.',
+'Le dossier avance au millimètre. Une unité de mesure familière au zizi.',
+'Le greffe coche la case. Le zizi peut méditer sur la beauté des petites cases.',
+'Tout est fait dans les temps. Maître Verrou ne donnera donc pas au zizi le plaisir d’un drame.',
+'Check-in réussi : le zizi reste enfermé dans son rôle de figurant administratif.',
+'La ponctualité est impeccable. Le zizi ne sera pas cité comme facteur déterminant.',
+'Une validation nette et propre. Le zizi n’a rien à ajouter au procès-verbal.',
+'Le dossier quotidien est signé. Votre zizi n’était pas consulté et s’en remettra.',
+'Ponctuel aujourd’hui. Maître Verrou félicite le gardien, certainement pas le zizi.',
+'Le greffe confirme la discipline du jour. Le zizi peut continuer à ne pas donner son avis.',
+'Le check-in est là. Le zizi, lui, reste sagement hors procédure.',
+'Une nouvelle journée sans oubli. Le zizi conserve son statut : petite pièce à conviction.',
+'Aujourd’hui, vous avez au moins maîtrisé le calendrier. Pour le zizi, le contrat s’en charge.',
+'Le dossier est à jour et le zizi reste à sa place : hors du comité de direction.',
+'Validation reçue. Pas d’audience disciplinaire aujourd’hui, au grand soulagement du zizi.',
+'Le greffe tamponne la journée. Le zizi n’obtient toujours pas de droit de veto.',
+'Bon élève aujourd’hui. Inutile de gonfler l’ego : le zizi s’en chargerait très mal.'
+];
+const NOTARY_TYPE_BANK={
+ missedCheckin:[
+  'Monsieur pense suffisamment à son petit zizi pour organiser tout un Locktober, mais pas assez à son cerveau pour remplir un check-in de trente secondes. Vingt lignes remettront la hiérarchie en place.',
+  'Le zizi était surveillé ; le calendrier, manifestement, beaucoup moins. Le greffe prescrit vingt lignes de niveau école primaire.',
+  'Un check-in oublié pour une affaire suivie tous les jours : le petit zizi réussit encore à produire plus de discipline que son propriétaire.',
+  'Maître Verrou constate une panne administrative. Vingt lignes devraient rappeler à Monsieur qu’un check-in ne demande pas un doctorat.'
+ ],
+ tamper:['Monsieur a tripoté sa cage pour essayer de gratter un peu de liberté à son petit zizi. Le cadenas, lui, a mieux compris le règlement.','Le zizi a obtenu une tentative de négociation manuelle. Le Tribunal rappelle que les doigts ne siègent pas au conseil d’administration.','Manipuler la cage pour gagner de la marge : beaucoup d’efforts pour donner quelques millimètres de pouvoir au zizi.'],
+ lateRelock:['Une sortie temporaire avait été autorisée et Monsieur a déjà essayé d’en faire des vacances pour son zizi. Médiocre négociation : la cage gagne.','Le retour en cage a traîné. Le zizi a cru à une prolongation ; Maître Verrou lui adresse le calendrier.','Autorisation temporaire ne signifiait pas indépendance du zizi. Le retard transforme donc le bonus en sanction.'],
+ briefRemoval:['Monsieur a sorti son zizi sans motif valable. Quelques minutes de liberté lui rapportent maintenant beaucoup plus longtemps à méditer sous sanction.','Un bref retrait pour un petit zizi et une longue trace au registre : le rendement administratif est remarquable.','Le zizi a connu une escapade non autorisée. Le greffe, beaucoup moins romantique, ouvre un dossier.'],
+ outsideTouch:['Monsieur a voulu jouer avec son zizi hors cage sans aller jusqu’au bout. Même sa désobéissance manque de discipline ; la sanction, elle, sera complète.','Le zizi a obtenu des caresses hors règlement. Il reçoit en échange une belle mention au dossier.','Stimulation hors cage : Monsieur a voulu donner au zizi des privilèges qu’il n’avait pas votés.'],
+ outsideOrgasm:['Monsieur a préféré obéir à son zizi plutôt qu’au règlement qu’il avait lui-même signé. Le Tribunal prend acte de cette capitulation peu glorieuse.','Un orgasme hors cage : le zizi a remporté son petit coup d’État. Maître Verrou rétablit immédiatement l’ordre constitutionnel.','Le règlement était clair, mais le zizi a visiblement présenté un argument auquel Monsieur a cédé beaucoup trop vite.'],
+ dishonesty:['Désobéir était déjà ridicule ; maquiller ensuite le dossier revient à demander au notaire de souligner le ridicule en rouge.','Le zizi avait déjà créé un incident ; inutile d’y ajouter une fiction administrative.','Fausse déclaration : Maître Verrou tolère les petits zizis, pas les petits arrangements avec le registre.'],
+ repeat:['Récidive. Votre petit zizi semble avoir davantage d’autorité sur vous que votre propre signature. Le Tribunal simplifie donc la hiérarchie.','Encore ? Le zizi n’a pas grandi, mais le dossier disciplinaire, lui, prend de l’ampleur.','La première leçon n’a manifestement pas atteint le bon organe. La récidive appelle donc une réponse plus nette.']
+};
+let inactivityTimer=null;
+let lastRenderedDay='';
+
+
 let state=loadState();
+function uuid(){return (crypto&&crypto.randomUUID)?crypto.randomUUID():'id-'+Date.now()+'-'+Math.random().toString(36).slice(2)}
+function pickDailyQuote(){
+  state.meta=state.meta||{dailyQuotes:{}};state.meta.dailyQuotes=state.meta.dailyQuotes||{};
+  const key=localKeyFromDate(new Date());
+  let idx=state.meta.dailyQuotes[key];
+  if(!Number.isInteger(idx)||idx<0||idx>=NOTARY_DAILY_BANK.length){idx=Math.floor(Math.random()*NOTARY_DAILY_BANK.length);state.meta.dailyQuotes[key]=idx;localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+  return NOTARY_DAILY_BANK[idx];
+}
+
 function clone(o){return JSON.parse(JSON.stringify(o));}
 
 function accessHash(value){let h=2166136261;for(const ch of String(value)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return ('00000000'+(h>>>0).toString(16)).slice(-8)}
@@ -230,7 +330,7 @@ function currentAccessHash(){return localStorage.getItem(ACCESS_HASH_KEY)||DEFAU
 function initAccessGate(){
   const gate=document.getElementById('accessGate');
   if(!gate)return;
-  if(sessionStorage.getItem(ACCESS_SESSION_KEY)==='1'){gate.classList.add('hidden');return}
+  if(sessionStorage.getItem(ACCESS_SESSION_KEY)==='1'){gate.classList.add('hidden');armAutoLock();return}
   gate.classList.remove('hidden');
   setTimeout(()=>document.getElementById('accessCodeInput')?.focus(),50);
 }
@@ -241,13 +341,25 @@ function tryUnlockSite(){
   if(accessHash(code)===currentAccessHash()){
     sessionStorage.setItem(ACCESS_SESSION_KEY,'1');
     document.getElementById('accessGate')?.classList.add('hidden');
-    if(input)input.value='';
-    if(err)err.textContent='';
+    if(input)input.value='';if(err)err.textContent='';armAutoLock();
   }else{
     if(err)err.textContent='Code refusé. Maître Verrou garde le dossier fermé.';
     if(input){input.value='';input.focus()}
   }
 }
+function lockSite(){
+  if(!currentAccessHash())return;
+  sessionStorage.removeItem(ACCESS_SESSION_KEY);
+  clearTimeout(inactivityTimer);
+  const gate=document.getElementById('accessGate');if(gate){gate.classList.remove('hidden');const input=document.getElementById('accessCodeInput');if(input){input.value='';setTimeout(()=>input.focus(),30)}}
+}
+function armAutoLock(){
+  clearTimeout(inactivityTimer);
+  if(sessionStorage.getItem(ACCESS_SESSION_KEY)!=='1')return;
+  const mins=Number(state?.settings?.autoLockMinutes||0);
+  if(mins>0)inactivityTimer=setTimeout(lockSite,mins*60000);
+}
+function activityPing(){if(sessionStorage.getItem(ACCESS_SESSION_KEY)==='1')armAutoLock()}
 function changeAccessCode(){
   const a=(document.getElementById('newAccessCode')?.value||'').trim();
   const b=(document.getElementById('confirmAccessCode')?.value||'').trim();
@@ -265,248 +377,185 @@ function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);return raw?
 function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));renderAll()}
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function fmt(d){return new Date(d).toLocaleString('fr-FR',{dateStyle:'medium',timeStyle:'short'})}
-function todayKey(d=new Date()){return d.toISOString().slice(0,10)}
+function todayKey(d=new Date()){return localKeyFromDate(d)}
 function dayOfOctober(){const d=new Date();if(d.getFullYear()!==2026||d.getMonth()!==9)return d<new Date('2026-10-01T00:00:00')?0:31;return d.getDate()}
 function sanctionActive(){return !!(state.sanction&&!state.sanction.suspended&&new Date(state.sanction.until)>new Date())}
 function sanctionRemaining(){if(!sanctionActive())return null;const ms=new Date(state.sanction.until)-new Date();return{h:Math.floor(ms/3600000),m:Math.floor((ms%3600000)/60000)}}
 function contractPhase(){const n=new Date(),start=new Date('2026-10-01T00:00:00'),end=new Date('2026-11-01T00:00:00');return n<start?'before':(n<end?'during':'after')}
-function currentCage(){const phase=contractPhase();if(phase==='before'||phase==='after')return 'Libre';if(sanctionActive()&&state.sanction.flat)return state.settings.flatCageName;const ci=[...state.checkins].reverse().find(x=>x.date.slice(0,10)===todayKey());if(!ci)return state.settings.normalCageName;if(ci.cage==='flat')return state.settings.flatCageName;if(ci.cage==='off-authorized')return 'Retirée (autorisé)';return state.settings.normalCageName}
+function currentCage(){const phase=contractPhase();if(phase==='before'||phase==='after')return 'Libre';if(sanctionActive()&&state.sanction.flat)return state.settings.flatCageName;const ci=[...state.checkins].reverse().find(x=>recordDayKey(x.date)===todayKey());if(!ci)return state.settings.normalCageName;if(ci.cage==='flat')return state.settings.flatCageName;if(ci.cage==='off-authorized')return 'Retirée (autorisé)';return state.settings.normalCageName}
 function playAllowed(){return !sanctionActive()}
 function isWednesday(dateStr){return new Date(dateStr+'T12:00:00').getDay()===3}
 function octoberWednesdays(){const arr=[];for(let i=1;i<=31;i++){const k=`2026-10-${String(i).padStart(2,'0')}`;if(isWednesday(k))arr.push(k)}return arr}
 function cleaningDone(key){return state.cleanings.some(x=>x.date.slice(0,10)===key)}
-function loadTabs(){document.querySelectorAll('.tabBtn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+btn.dataset.tab).classList.add('active')})}
+function poolDone(key){return (state.poolVisits||[]).some(x=>recordDayKey(x.date)===key)}
+function markPoolNow(){state.poolVisits=state.poolVisits||[];if(!poolDone(todayKey()))state.poolVisits.push({date:new Date().toISOString(),note:'Piscine validée.'});saveState()}
+function loadTabs(){document.querySelectorAll('.tabBtn').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('section.tab').forEach(s=>s.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+btn.dataset.tab)?.classList.add('active')})}
 function openModal(id){document.getElementById(id).classList.add('show')} function closeModal(id){document.getElementById(id).classList.remove('show')}
 function openCheckin(){openModal('checkinModal')} function openDeviation(){goTo('court')} function openSafety(){openModal('safetyModal')}
 function signContract(){const name=(document.getElementById('signatureInput').value.trim()||state.settings.displayName||'Lénaïc');state.signature={name,date:new Date().toISOString()};saveState()}
 function clearSignature(){state.signature=null;saveState()}
 function markShave(){state.prep.shave=new Date().toISOString();saveState()}
 function togglePrepFlag(flag){state.prep[flag]=!state.prep[flag];saveState()}
-function markCleaningNow(){state.cleanings.push({date:new Date().toISOString(),note:'Nettoyage de cage validé.'});saveState()}
-function saveCheckin(){const item={id:crypto.randomUUID(),date:new Date().toISOString(),cage:ciCage.value,comfort:ciComfort.value,arousal:+ciArousal.value,frustration:+ciFrustration.value,edging:ciEdging.checked,orgasm:ciOrgasm.checked,note:ciNote.value.trim()};if(item.comfort==='problem'){closeModal('checkinModal');openSafety();return}state.checkins.push(item);saveState();ciNote.value='';ciEdging.checked=false;ciOrgasm.checked=false;closeModal('checkinModal')}
+function markCleaningNow(){if(!cleaningDone(todayKey()))state.cleanings.push({date:new Date().toISOString(),note:'Nettoyage de cage validé.'});saveState()}
+function saveCheckin(){const item={id:uuid(),date:new Date().toISOString(),cage:ciCage.value,comfort:ciComfort.value,arousal:+ciArousal.value,frustration:+ciFrustration.value,edging:ciEdging.checked,orgasm:ciOrgasm.checked,note:ciNote.value.trim()};if(item.comfort==='problem'){closeModal('checkinModal');openSafety();return}state.checkins.push(item);saveState();ciNote.value='';ciEdging.checked=false;ciOrgasm.checked=false;closeModal('checkinModal')}
 function notaryTextFor(type){
   const hard=state.settings.humiliationLevel==='hard';
-  const hardMap={
-    missedCheckin:'Monsieur pense suffisamment à son petit zizi pour organiser tout un Locktober, mais pas assez à son cerveau pour remplir un check-in de trente secondes. Le Tribunal prescrira donc des lignes, niveau école primaire.',
-    tamper:'Monsieur a tripoté sa cage pour essayer de gratter un peu de liberté à son petit zizi. Le cadenas, lui, a mieux compris le règlement.',
-    lateRelock:'Une sortie temporaire avait été autorisée, et Monsieur a déjà essayé d’en faire des vacances pour son zizi. Médiocre négociation : la cage gagne.',
-    briefRemoval:'Monsieur a sorti son zizi sans motif valable. Quelques minutes de liberté lui rapportent maintenant beaucoup plus longtemps à méditer sous sanction.',
-    outsideTouch:'Monsieur a voulu jouer avec son zizi hors cage sans aller jusqu’au bout. Même sa désobéissance manque de discipline ; la sanction, elle, sera complète.',
-    outsideOrgasm:'Monsieur a préféré obéir à son zizi plutôt qu’au règlement qu’il avait lui-même signé. Le Tribunal prend acte de cette capitulation particulièrement peu glorieuse.',
-    dishonesty:'Désobéir était déjà ridicule ; maquiller ensuite le dossier revient à demander au notaire de souligner le ridicule en rouge.',
-    repeat:'Récidive. Votre petit zizi semble avoir davantage d’autorité sur vous que votre propre signature. Le Tribunal va donc simplifier la hiérarchie.'
-  };
-  const softMap={
-    missedCheckin:'Check-in oublié. Une sanction écrite s’applique.',
-    tamper:'Contournement volontaire constaté. Le rappel au règlement s’applique.',
-    lateRelock:'Remise en cage retardée sans motif valable. Sanction légère appliquée.',
-    briefRemoval:'Retrait non autorisé constaté. Sanction de niveau intermédiaire.',
-    outsideTouch:'Stimulation hors cage constatée. Sanction aggravée.',
-    outsideOrgasm:'Orgasme hors cage constaté. Sanction majeure.',
-    dishonesty:'Omission volontaire constatée. Le registre est corrigé et une sanction s’applique.',
-    repeat:'Récidive constatée. Le barème maximal prévu s’applique.'
-  };
-  return (hard?hardMap:softMap)[type]||'Le Tribunal a statué.';
+  if(!hard){
+    const softMap={missedCheckin:'Check-in oublié. Une sanction écrite s’applique.',tamper:'Contournement volontaire constaté. Le rappel au règlement s’applique.',lateRelock:'Remise en cage retardée sans motif valable. Sanction légère appliquée.',briefRemoval:'Retrait non autorisé constaté. Sanction de niveau intermédiaire.',outsideTouch:'Stimulation hors cage constatée. Sanction aggravée.',outsideOrgasm:'Orgasme hors cage constaté. Sanction majeure.',dishonesty:'Omission volontaire constatée. Le registre est corrigé et une sanction s’applique.',repeat:'Récidive constatée. Le barème maximal prévu s’applique.'};
+    return softMap[type]||'Le Tribunal a statué.';
+  }
+  const bank=NOTARY_TYPE_BANK[type]||['Le Tribunal a statué.'];return bank[Math.floor(Math.random()*bank.length)];
 }
-function lineCountForMissedCheckin(){
-  const previous=state.deviations.filter(x=>x.type==='missedCheckin').length;
-  return Math.min(60,20*(previous+1));
-}
+function lineCountForMissedCheckin(){return 20}
 function submitConfession(){
   const type=document.getElementById('confType').value;
   const note=document.getElementById('confNote').value.trim();
-  const scale=SANCTION_SCALE[type];
-  const start=new Date();
+  const scale=SANCTION_SCALE[type];const start=new Date();
   if(type==='missedCheckin'){
-    const lines=lineCountForMissedCheckin();
-    const item={id:crypto.randomUUID(),date:start.toISOString(),type,note,hours:0,flat:false,lines,linesDone:false,commentary:notaryTextFor(type)};
-    state.deviations.push(item);
-    saveState();
-    document.getElementById('confNote').value='';
-    renderTribunal();
-    return;
+    const item={id:uuid(),date:start.toISOString(),type,note,hours:0,flat:false,lines:20,linesDone:false,status:'pending',commentary:notaryTextFor(type)};
+    state.deviations.push(item);saveState();document.getElementById('confNote').value='';renderTribunal();return;
   }
   const until=new Date(start.getTime()+scale.hours*3600000);
-  const item={id:crypto.randomUUID(),date:start.toISOString(),type,note,hours:scale.hours,flat:scale.flat,commentary:notaryTextFor(type)};
+  const item={id:uuid(),date:start.toISOString(),type,note,hours:scale.hours,flat:scale.flat,status:'pending',commentary:notaryTextFor(type)};
   state.deviations.push(item);
   state.sanction={started:start.toISOString(),until:until.toISOString(),hours:scale.hours,noPlay:scale.noPlay,flat:scale.flat,suspended:false,type,commentary:item.commentary};
+  saveState();document.getElementById('confNote').value='';renderTribunal();
+}
+function markLinesDone(id){openLinesPunishment(id)}
+function openLinesPunishment(id){
+  const item=state.deviations.find(x=>x.id===id);if(!item||item.type!=='missedCheckin'||deviationStatus(item)!=='pending')return;
+  const phrase='Je n’oublierai pas mon check-in quotidien.';const count=20;
+  let modal=document.getElementById('linesModal');
+  if(!modal){modal=document.createElement('div');modal.className='modal';modal.id='linesModal';document.body.appendChild(modal)}
+  modal.innerHTML=`<div class="sheet"><h2>✍️ Les vingt lignes</h2><p class="muted">Chaque champ doit contenir exactement : <strong>« ${phrase} »</strong></p><div class="notice">Le copier-coller, le couper-coller, le glisser-déposer et l’insertion depuis le presse-papiers sont désactivés dans cette feuille.</div><div class="linesSheet">${Array.from({length:count},(_,i)=>`<label class="lineRow"><span>${i+1}.</span><input type="text" autocomplete="off" autocorrect="off" spellcheck="false" data-line="${i}"></label>`).join('')}</div><div class="lineProgress" id="lineProgress">0 / ${count} correctes</div><div class="rowActions" style="margin-top:12px"><button class="btn" id="validateLines" disabled>Valider la sanction</button><button class="btn ghost" onclick="closeModal('linesModal')">Fermer</button></div></div>`;
+  modal.classList.add('show');
+  const inputs=[...modal.querySelectorAll('input[data-line]')];const validate=modal.querySelector('#validateLines');
+  const block=e=>{e.preventDefault();const p=modal.querySelector('#lineProgress');if(p)p.textContent='Copier-coller interdit : saisissez chaque ligne.'};
+  const verify=()=>{let ok=0;inputs.forEach(inp=>{const good=inp.value===phrase;inp.classList.toggle('good',good);inp.classList.toggle('bad',inp.value.length>0&&!good);if(good)ok++});modal.querySelector('#lineProgress').textContent=`${ok} / ${count} correctes`;validate.disabled=ok!==count};
+  inputs.forEach(inp=>{['paste','copy','cut','drop','dragover','contextmenu'].forEach(ev=>inp.addEventListener(ev,block));inp.addEventListener('beforeinput',e=>{if(['insertFromPaste','insertFromDrop','insertFromYank','insertReplacementText'].includes(e.inputType))block(e)});inp.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if((e.ctrlKey||e.metaKey)&&['v','c','x'].includes(k))block(e);if(e.shiftKey&&e.key==='Insert')block(e)});inp.addEventListener('input',verify)});
+  validate.onclick=()=>{if(inputs.some(i=>i.value!==phrase))return;item.linesDone=true;item.status='executed';item.executedAt=new Date().toISOString();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));closeModal('linesModal');renderAll()};
+}
+function deviationStatus(item){
+  if(item.status)return item.status;
+  if(item.type==='missedCheckin')return item.linesDone?'executed':'pending';
+  if(state.sanction&&state.sanction.started===item.date&&(sanctionActive()||state.sanction.suspended))return 'pending';
+  return 'executed';
+}
+function deviationStatusLabel(s){return({pending:'En cours',executed:'Exécuté',cancelled:'Annulé',error:'Erreur de saisie',acquitted:'Acquitté'})[s]||s}
+function markDeviationStatus(id,status){
+  const item=state.deviations.find(x=>x.id===id);if(!item)return;
+  if(status==='executed'&&item.type==='missedCheckin'&&!item.linesDone){openLinesPunishment(id);return}
+  item.status=status;item.statusChangedAt=new Date().toISOString();
+  if(status==='executed')item.executedAt=item.statusChangedAt;
+  if(['cancelled','error','acquitted','executed'].includes(status)&&state.sanction&&state.sanction.started===item.date)state.sanction=null;
   saveState();
-  document.getElementById('confNote').value='';
-  renderTribunal();
 }
-function markLinesDone(id){
-  const item=state.deviations.find(x=>x.id===id);
-  if(item){item.linesDone=true;saveState()}
-}
-
-function deleteDeviation(id){
-  const item=state.deviations.find(x=>x.id===id);
-  if(!item)return;
-  const ok=confirm("Annuler cet écart ? Il sera supprimé du dossier et toute sanction directement liée sera annulée.");
-  if(!ok)return;
-
-  state.deviations=state.deviations.filter(x=>x.id!==id);
-
-  // Une sanction classique est créée avec exactement la même date de départ
-  // que l'écart qui l'a déclenchée.
-  if(state.sanction && state.sanction.started===item.date){
-    state.sanction=null;
-  }
-
-  saveState();
-}
+function deleteDeviation(id){if(confirm('Annuler cet écart ? Il restera dans l’historique avec le statut « Annulé ».'))markDeviationStatus(id,'cancelled')}
+function markDeviationError(id){if(confirm('Classer cette entrée comme erreur de saisie ? Elle restera visible dans l’historique.'))markDeviationStatus(id,'error')}
+function acquitDeviation(id){markDeviationStatus(id,'acquitted')}
 function localKeyFromDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function recordDayKey(iso){const d=new Date(iso);return localKeyFromDate(d)}
 function detectMissedCheckins(){
-  const start=new Date(2026,9,1,0,0,0);
-  const end=new Date(2026,10,1,0,0,0);
-  const now=new Date();
-  if(now<=start)return false;
-  const last=new Date(Math.min(now.getTime(),end.getTime()));
-  last.setHours(0,0,0,0);
-  let changed=false;
+  const start=new Date(2026,9,1,0,0,0);const end=new Date(2026,10,1,0,0,0);const now=new Date();if(now<=start)return false;
+  const last=new Date(Math.min(now.getTime(),end.getTime()));last.setHours(0,0,0,0);let changed=false;
   for(let d=new Date(start);d<last;d.setDate(d.getDate()+1)){
-    const key=localKeyFromDate(d);
-    const hasCheckin=state.checkins.some(x=>recordDayKey(x.date)===key);
-    const already=state.deviations.some(x=>x.type==='missedCheckin'&&x.missedDate===key);
-    if(!hasCheckin&&!already){
-      const previous=state.deviations.filter(x=>x.type==='missedCheckin').length;
-      const lines=Math.min(60,20*(previous+1));
-      state.deviations.push({id:crypto.randomUUID(),date:new Date().toISOString(),missedDate:key,type:'missedCheckin',note:`Aucun check-in enregistré pour le ${key}.`,hours:0,flat:false,lines,linesDone:false,commentary:notaryTextFor('missedCheckin')});
-      changed=true;
-    }
+    const key=localKeyFromDate(d);const hasCheckin=state.checkins.some(x=>recordDayKey(x.date)===key);const already=state.deviations.some(x=>x.type==='missedCheckin'&&x.missedDate===key);
+    if(!hasCheckin&&!already){state.deviations.push({id:uuid(),date:new Date().toISOString(),missedDate:key,type:'missedCheckin',note:`Aucun check-in enregistré pour le ${key}.`,hours:0,flat:false,lines:20,linesDone:false,status:'pending',automatic:true,commentary:notaryTextFor('missedCheckin')});changed=true}
   }
-  if(changed)localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
-  return changed;
+  if(changed)localStorage.setItem(STORAGE_KEY,JSON.stringify(state));return changed;
 }
-function saveSafety(){const item={id:crypto.randomUUID(),date:new Date().toISOString(),reason:safetyReason.value,note:safetyNote.value.trim()};state.safety.push(item);if(state.sanction)state.sanction.suspended=true;saveState();safetyNote.value='';closeModal('safetyModal')}
-function saveSettings(){state.settings.displayName=displayName.value.trim()||'Lénaïc';state.settings.normalCageName=normalCageName.value.trim()||'Cage normale';state.settings.flatCageName=flatCageName.value.trim()||'Flat cage';state.settings.humiliationLevel=humiliationLevel.value;saveState()}
-function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='locktober-os-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function saveSafety(){const item={id:uuid(),date:new Date().toISOString(),reason:safetyReason.value,note:safetyNote.value.trim()};state.safety.push(item);if(state.sanction)state.sanction.suspended=true;saveState();safetyNote.value='';closeModal('safetyModal')}
+function saveSettings(){state.settings.displayName=displayName.value.trim()||'Lénaïc';state.settings.normalCageName=normalCageName.value.trim()||'Cage normale';state.settings.flatCageName=flatCageName.value.trim()||'Flat cage';state.settings.humiliationLevel=humiliationLevel.value;state.settings.autoLockMinutes=Number(document.getElementById('autoLockMinutes')?.value||0);state.settings.discreetMode=!!document.getElementById('discreetMode')?.checked;saveState();armAutoLock()}
+function exportData(){state.settings.lastExportAt=new Date().toISOString();localStorage.setItem(STORAGE_KEY,JSON.stringify(state));const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='locktober-os-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);renderBackupReminder()}
 function importData(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state=mergeDefaults(JSON.parse(r.result),clone(defaultState));saveState();alert('Import terminé.')}catch(err){alert('Fichier JSON invalide.')}};r.readAsText(f);e.target.value=''}
 function resetAll(){if(confirm('Effacer toutes les données locales ?')){localStorage.removeItem(STORAGE_KEY);state=clone(defaultState);renderAll()}}
 function goTo(tab){document.querySelector(`.tabBtn[data-tab="${tab}"]`).click()}
 function renderPrep(){const items=[{title:'Zone tondue / rasée',desc:state.prep.shave?('Déclaré le '+fmt(state.prep.shave)):'À déclarer avant le 1er octobre.',btn:'🪒 Déclarer',done:!!state.prep.shave,onclick:'markShave()'},{title:'Cage nettoyée',desc:state.prep.cageCleanedPrep?'Préparation validée.':'Prépare et nettoie la cage.',btn:state.prep.cageCleanedPrep?'Retirer la validation':'Valider',done:!!state.prep.cageCleanedPrep,onclick:"togglePrepFlag('cageCleanedPrep')"},{title:'Clé d’urgence vérifiée',desc:state.prep.keyChecked?'Clé d’urgence vérifiée.':'Vérifie qu’un retrait reste possible.',btn:state.prep.keyChecked?'Retirer la validation':'Valider',done:!!state.prep.keyChecked,onclick:"togglePrepFlag('keyChecked')"},{title:'Peau sans irritation',desc:state.prep.skinOk?'Peau déclarée saine.':'À confirmer avant mise sous cage.',btn:state.prep.skinOk?'Retirer la validation':'Valider',done:!!state.prep.skinOk,onclick:"togglePrepFlag('skinOk')"},{title:'Contrat signé',desc:state.signature?('Signé le '+fmt(state.signature.date)):'Signature manquante.',btn:'Aller au contrat',done:!!state.signature,onclick:"goTo('contract')"}];prepList.innerHTML=items.map(i=>`<div class="prepItem"><div class="left"><b>${i.done?'✅':'▫️'} ${esc(i.title)}</b><div class="small muted">${esc(i.desc)}</div></div><button class="btn small ${i.done?'ghost':'secondary'}" onclick="${i.onclick}">${i.btn}</button></div>`).join('')}
-function renderRoutine(){const today=todayKey();const upcoming=octoberWednesdays();const nextThree=upcoming.filter(d=>d>=today).slice(0,3);let html='';if(isWednesday(today)){html+=`<div class="routineItem"><strong>Aujourd’hui : mercredi piscine</strong><div class="small muted">Nettoyage de cage prévu par défaut.</div><div style="margin-top:10px">${cleaningDone(today)?'<span class="badge ok">🧼 Nettoyage validé</span>':'<button class="btn small secondary" onclick="markCleaningNow()">🧼 Valider le nettoyage</button>'}</div></div>`}else{html+='<div class="routineItem"><strong>Routine par défaut</strong><div class="small muted">Chaque mercredi = piscine + nettoyage de cage.</div></div>'}html+=nextThree.map(d=>`<div class="routineItem"><strong>${new Date(d+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}</strong><div class="small muted">Nettoyage prévu${cleaningDone(d)?' — déjà validé':''}.</div></div>`).join('');routineBox.innerHTML=html}
+function renderRoutine(){
+  const box=document.getElementById('routineBox');if(!box)return;
+  const today=todayKey();const upcoming=octoberWednesdays();const nextThree=upcoming.filter(d=>d>=today).slice(0,3);let html='';
+  if(isWednesday(today)){
+    html+=`<div class="routineItem"><strong>Aujourd’hui : mercredi piscine</strong><div class="small muted">Piscine et nettoyage de cage prévus par défaut.</div><div class="miniActions">${poolDone(today)?'<span class="badge ok">🏊 Piscine validée</span>':'<button class="btn small secondary" onclick="markPoolNow()">🏊 Valider la piscine</button>'}${cleaningDone(today)?'<span class="badge ok">🧼 Nettoyage validé</span>':'<button class="btn small secondary" onclick="markCleaningNow()">🧼 Valider le nettoyage</button>'}</div></div>`;
+  }else html+='<div class="routineItem"><strong>Routine par défaut</strong><div class="small muted">Chaque mercredi = piscine + nettoyage de cage.</div></div>';
+  html+=nextThree.map(d=>`<div class="routineItem"><strong>${new Date(d+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})}</strong><div class="small muted">🏊 Piscine${poolDone(d)?' validée':''} • 🧼 Nettoyage${cleaningDone(d)?' validé':' prévu'}.</div></div>`).join('');box.innerHTML=html;
+}
 function renderCalendar(){
-  const cal=document.getElementById('calendar');
-  if(!cal) return;
-  cal.innerHTML='';
-  const labels=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
-  labels.forEach(label=>{
-    const h=document.createElement('div');
-    h.className='weekday';
-    h.textContent=label;
-    cal.appendChild(h);
-  });
-
-  // 1er octobre 2026 = jeudi. Conversion JS dimanche=0 vers lundi=0.
-  const first=new Date('2026-10-01T12:00:00');
-  const mondayIndex=(first.getDay()+6)%7;
-  for(let i=0;i<mondayIndex;i++){
-    const empty=document.createElement('div');
-    empty.className='day empty';
-    cal.appendChild(empty);
-  }
-
+  const cal=document.getElementById('calendar');if(!cal)return;cal.innerHTML='';
+  const labels=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];labels.forEach(label=>{const h=document.createElement('div');h.className='weekday';h.textContent=label;cal.appendChild(h)});
+  const first=new Date('2026-10-01T12:00:00');const mondayIndex=(first.getDay()+6)%7;for(let i=0;i<mondayIndex;i++){const empty=document.createElement('div');empty.className='day empty';cal.appendChild(empty)}
   const t=todayKey();
   for(let i=1;i<=31;i++){
-    const key=`2026-10-${String(i).padStart(2,'0')}`;
-    const cis=state.checkins.filter(x=>x.date.slice(0,10)===key);
-    const devs=state.deviations.filter(x=>x.date.slice(0,10)===key);
-    const safes=state.safety.filter(x=>x.date.slice(0,10)===key);
-    let cls='',txt=[];
-    if(cis.length){cls='ok';txt.push('check-in')}
-    if(isWednesday(key)) txt.push('🏊');
-    if(cleaningDone(key)) txt.push('🧼');
-    if(cis.some(x=>x.cage==='off-authorized')||safes.length){cls='warn';txt.unshift('retrait')}
-    if(devs.length){cls='danger';txt.unshift('écart')}
-    const el=document.createElement('div');
-    el.className=`day ${cls} ${t===key?'today':''}`;
-    el.innerHTML=`<b>${i}</b><small>${txt.join(' • ')||'—'}</small>`;
-    cal.appendChild(el);
+    const key=`2026-10-${String(i).padStart(2,'0')}`;const cis=state.checkins.filter(x=>recordDayKey(x.date)===key);const devs=state.deviations.filter(x=>(x.missedDate||recordDayKey(x.date))===key&&deviationStatus(x)!=='error');const safes=state.safety.filter(x=>recordDayKey(x.date)===key);let cls='',icons=[];
+    if(cis.length){cls='ok';icons.push('✓')}if(devs.length){cls='danger';icons.push('⚖️')}if(cleaningDone(key))icons.push('🧼');if(isWednesday(key))icons.push('🏊');if(devs.some(x=>!['cancelled','error','acquitted'].includes(deviationStatus(x))))icons.push('🔒');if(cis.some(x=>x.cage==='off-authorized')||safes.length){if(!devs.length)cls='warn'}
+    const el=document.createElement('div');el.className=`day ${cls} ${t===key?'today':''}`;el.innerHTML=`<b>${i}</b><small class="calendarIcons">${icons.join(' ')||'—'}</small>`;cal.appendChild(el);
   }
 }
-function renderRecent(){const all=[...state.checkins.map(x=>({...x,kind:'checkin'})),...state.deviations.map(x=>({...x,kind:'deviation'})),...state.safety.map(x=>({...x,kind:'safety'})),...state.cleanings.map(x=>({...x,kind:'cleaning'})),...(state.prep.shave?[{date:state.prep.shave,kind:'shave'}]:[])].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,7);if(!all.length){recentEvents.innerHTML='<div class="event"><span class="muted">Aucun acte enregistré.</span></div>';return}recentEvents.innerHTML=all.map(x=>{if(x.kind==='checkin')return `<div class="event ok"><strong>✅ Check-in</strong><small>${fmt(x.date)}</small>${x.note?`<div>${esc(x.note)}</div>`:''}</div>`;if(x.kind==='deviation')return `<div class="event danger"><strong>⚖️ Écart : ${esc(SANCTION_SCALE[x.type].label)}</strong><small>${fmt(x.date)}</small><div>${esc(x.commentary||'')}</div></div>`;if(x.kind==='safety')return `<div class="event warn"><strong>🚨 Sécurité</strong><small>${fmt(x.date)}</small><div>${esc(x.reason)}</div></div>`;if(x.kind==='cleaning')return `<div class="event ok"><strong>🧼 Nettoyage de cage</strong><small>${fmt(x.date)}</small></div>`;return `<div class="event ok"><strong>🪒 Rasage / tonte déclaré</strong><small>${fmt(x.date)}</small></div>`}).join('')}
+function renderRecent(){const all=[...state.checkins.map(x=>({...x,kind:'checkin'})),...state.deviations.map(x=>({...x,kind:'deviation'})),...state.safety.map(x=>({...x,kind:'safety'})),...state.cleanings.map(x=>({...x,kind:'cleaning'})),...(state.poolVisits||[]).map(x=>({...x,kind:'pool'})),...(state.prep.shave?[{date:state.prep.shave,kind:'shave'}]:[])].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,7);if(!all.length){recentEvents.innerHTML='<div class="event"><span class="muted">Aucun acte enregistré.</span></div>';return}recentEvents.innerHTML=all.map(x=>{if(x.kind==='checkin')return `<div class="event ok"><strong>✅ Check-in</strong><small>${fmt(x.date)}</small>${x.note?`<div>${esc(x.note)}</div>`:''}</div>`;if(x.kind==='deviation')return `<div class="event ${['cancelled','error','acquitted'].includes(deviationStatus(x))?'':'danger'}"><strong>⚖️ ${esc(SANCTION_SCALE[x.type].label)}</strong><small>${fmt(x.date)} • ${deviationStatusLabel(deviationStatus(x))}</small><div>${esc(x.commentary||'')}</div></div>`;if(x.kind==='safety')return `<div class="event warn"><strong>🚨 Sécurité</strong><small>${fmt(x.date)}</small><div>${esc(x.reason)}</div></div>`;if(x.kind==='cleaning')return `<div class="event ok"><strong>🧼 Nettoyage de cage</strong><small>${fmt(x.date)}</small></div>`;if(x.kind==='pool')return `<div class="event ok"><strong>🏊 Piscine</strong><small>${fmt(x.date)}</small></div>`;return `<div class="event ok"><strong>🪒 Rasage / tonte déclaré</strong><small>${fmt(x.date)}</small></div>`}).join('')}
 function renderLog(){
-  const entries=[...state.checkins.map(x=>({...x,kind:'checkin'})),...state.cleanings.map(x=>({...x,kind:'cleaning'})),...state.safety.map(x=>({...x,kind:'safety'})),...state.deviations.map(x=>({...x,kind:'deviation'})),...(state.prep.shave?[{date:state.prep.shave,kind:'shave'}]:[])].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const entries=[...state.checkins.map(x=>({...x,kind:'checkin'})),...state.cleanings.map(x=>({...x,kind:'cleaning'})),...(state.poolVisits||[]).map(x=>({...x,kind:'pool'})),...state.safety.map(x=>({...x,kind:'safety'})),...state.deviations.map(x=>({...x,kind:'deviation'})),...(state.prep.shave?[{date:state.prep.shave,kind:'shave'}]:[])].sort((a,b)=>new Date(b.date)-new Date(a.date));
   if(!entries.length){logList.innerHTML='<div class="event"><span class="muted">Journal vide.</span></div>';return}
-  logList.innerHTML=entries.map(x=>{
-    if(x.kind==='checkin')return `<div class="event ok"><strong>Check-in</strong><small>${fmt(x.date)}</small><div class="small">Cage : ${esc(x.cage)} • Excitation ${x.arousal}/10 • Frustration ${x.frustration}/10 ${x.edging?'• edging':''} ${x.orgasm?'• orgasme en cage':''}</div>${x.note?`<div>${esc(x.note)}</div>`:''}</div>`;
-    if(x.kind==='cleaning')return `<div class="event ok"><strong>🧼 Nettoyage de cage</strong><small>${fmt(x.date)}</small></div>`;
-    if(x.kind==='safety')return `<div class="event warn"><strong>🚨 Retrait de sécurité</strong><small>${fmt(x.date)}</small><div>${esc(x.reason)}</div>${x.note?`<div>${esc(x.note)}</div>`:''}</div>`;
-    if(x.kind==='deviation')return `<div class="event danger"><strong>⚖️ Confession au Tribunal</strong><small>${fmt(x.date)} • ${esc(SANCTION_SCALE[x.type].label)}</small>${x.note?`<div>${esc(x.note)}</div>`:''}<div>${esc(x.commentary||'')}</div></div>`;
-    return `<div class="event ok"><strong>🪒 Rasage / tonte</strong><small>${fmt(x.date)}</small></div>`;
-  }).join('')
+  logList.innerHTML=entries.map(x=>{if(x.kind==='checkin')return `<div class="event ok"><strong>Check-in</strong><small>${fmt(x.date)}</small><div class="small">Cage : ${esc(x.cage)} • Excitation ${x.arousal}/10 • Frustration ${x.frustration}/10 ${x.edging?'• edging':''} ${x.orgasm?'• orgasme en cage':''}</div>${x.note?`<div>${esc(x.note)}</div>`:''}</div>`;if(x.kind==='cleaning')return `<div class="event ok"><strong>🧼 Nettoyage de cage</strong><small>${fmt(x.date)}</small></div>`;if(x.kind==='pool')return `<div class="event ok"><strong>🏊 Piscine</strong><small>${fmt(x.date)}</small></div>`;if(x.kind==='safety')return `<div class="event warn"><strong>🚨 Retrait de sécurité</strong><small>${fmt(x.date)}</small><div>${esc(x.reason)}</div>${x.note?`<div>${esc(x.note)}</div>`:''}</div>`;if(x.kind==='deviation')return `<div class="event ${['cancelled','error','acquitted'].includes(deviationStatus(x))?'':'danger'}"><strong>⚖️ Tribunal — ${deviationStatusLabel(deviationStatus(x))}</strong><small>${fmt(x.date)} • ${esc(SANCTION_SCALE[x.type].label)}</small>${x.note?`<div>${esc(x.note)}</div>`:''}<div>${esc(x.commentary||'')}</div></div>`;return `<div class="event ok"><strong>🪒 Rasage / tonte</strong><small>${fmt(x.date)}</small></div>`}).join('')
+}
+function tribunalActionButtons(item){
+  if(deviationStatus(item)!=='pending')return '';
+  const exec=item.type==='missedCheckin'?`<button class="btn secondary small" onclick="openLinesPunishment('${item.id}')">✍️ Faire les 20 lignes</button>`:`<button class="btn secondary small" onclick="markDeviationStatus('${item.id}','executed')">✓ Marquer exécuté</button>`;
+  return `${exec}<button class="btn ghost small" onclick="acquitDeviation('${item.id}')">Acquitter</button><button class="btn ghost small" onclick="deleteDeviation('${item.id}')">Annuler l’écart</button><button class="btn ghost small" onclick="markDeviationError('${item.id}')">Erreur de saisie</button>`;
 }
 function renderTribunal(){
-  const box=document.getElementById('tribunalSentence');
-  if(!box)return;
-  const latest=[...state.deviations].sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
-  if(!latest){box.innerHTML='';return}
-  const scale=SANCTION_SCALE[latest.type];
-  if(latest.type==='missedCheckin'){
-    const lineText='Je n’oublierai pas mon check-in quotidien.';
-    const status=latest.linesDone
-      ? '<p class="sentencePenalty">✅ Les lignes ont été déclarées faites. Le Tribunal consent à ne pas vous donner une gommette.</p>'
-      : `<div class="linesPunishment"><strong>${latest.lines} lignes à recopier :</strong><p>« ${lineText} »</p><button class="btn secondary" onclick="markLinesDone('${latest.id}')">J’ai fait mes lignes</button></div>`;
-    box.innerHTML=`<div class="card sentenceCard"><div class="eyebrow">Étape 2 — Sentence</div><h3><span class="stamp">JUGEMENT</span> ${esc(scale.label)}</h3><div class="sentenceText">« ${esc(latest.commentary||'Le Tribunal a statué.')} »</div>${latest.note?`<p><strong>Constat :</strong> ${esc(latest.note)}</p>`:''}${status}<div class="miniActions" style="margin-top:14px"><button class="btn ghost small" onclick="deleteDeviation('${latest.id}')">🗑️ Annuler cet écart</button></div></div>`;
-    return;
+  const box=document.getElementById('tribunalSentence');if(!box)return;
+  const sorted=[...state.deviations].sort((a,b)=>new Date(b.date)-new Date(a.date));const latest=sorted.find(x=>deviationStatus(x)==='pending')||sorted[0];
+  if(!latest)box.innerHTML='<div class="card"><span class="muted">Aucun dossier devant le Tribunal.</span></div>';
+  else{
+    const scale=SANCTION_SCALE[latest.type];const st=deviationStatus(latest);let statusHtml='';
+    if(latest.type==='missedCheckin')statusHtml=latest.linesDone?'<p class="sentencePenalty">✅ Les vingt lignes ont été exécutées et classées.</p>':`<div class="linesPunishment"><strong>20 lignes à saisir réellement :</strong><p>« Je n’oublierai pas mon check-in quotidien. »</p><button class="btn secondary" onclick="openLinesPunishment('${latest.id}')">Ouvrir la feuille de lignes</button></div>`;
+    else if(st==='pending'&&sanctionActive()&&state.sanction?.started===latest.date){const r=sanctionRemaining();statusHtml=`<p class="sentencePenalty">Sentence en cours : ${esc(scale.text)}</p><p><strong>Temps restant :</strong> ${r.h} h ${r.m} min.</p>`}
+    else statusHtml=`<p class="sentencePenalty">Statut : ${deviationStatusLabel(st)}.</p>`;
+    box.innerHTML=`<div class="card sentenceCard"><div class="eyebrow">Étape 2 — Sentence</div><h3><span class="stamp">JUGEMENT</span> ${esc(scale.label)}</h3><div class="sentenceText">« ${esc(latest.commentary||'Le Tribunal a statué.')} »</div>${latest.note?`<p><strong>Constat :</strong> ${esc(latest.note)}</p>`:''}${statusHtml}<div class="miniActions" style="margin-top:14px">${tribunalActionButtons(latest)}</div></div>`;
   }
-  let statusHtml='';
-  if(sanctionActive()){
-    const r=sanctionRemaining();
-    statusHtml=`<p class="sentencePenalty">Sentence en cours : ${esc(scale.text)}</p><p><strong>Temps restant :</strong> ${r.h} h ${r.m} min.</p>`;
-  }else if(state.sanction&&state.sanction.suspended){
-    statusHtml='<p class="sentencePenalty">Sentence suspendue pour raison de sécurité.</p>';
-  }else{
-    statusHtml='<p class="sentencePenalty">Sentence prononcée. La période de sanction est terminée.</p>';
-  }
-  box.innerHTML=`<div class="card sentenceCard"><div class="eyebrow">Étape 2 — Sentence</div><h3><span class="stamp">JUGEMENT</span> ${esc(scale.label)}</h3><div class="sentenceText">« ${esc(latest.commentary||'Le Tribunal a statué.')} »</div>${latest.note?`<p><strong>Confession versée au dossier :</strong> ${esc(latest.note)}</p>`:''}${statusHtml}<div class="miniActions" style="margin-top:14px"><button class="btn ghost small" onclick="deleteDeviation('${latest.id}')">🗑️ Annuler cet écart</button></div></div>`;
+  renderTribunalHistory();
+}
+function renderTribunalHistory(){
+  const h=document.getElementById('tribunalHistory');if(!h)return;const list=[...state.deviations].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(!list.length){h.innerHTML='<span class="muted">Aucune audience enregistrée.</span>';return}
+  h.innerHTML=list.map(x=>{const st=deviationStatus(x);const when=x.missedDate?`Oubli du ${x.missedDate}`:fmt(x.date);return `<div class="historyItem"><div class="historyHead"><div><strong>${esc(SANCTION_SCALE[x.type]?.label||x.type)}</strong><div class="historyMeta">${esc(when)}${x.automatic?' • constat automatique':''}</div></div><span class="statusBadge ${st}">${deviationStatusLabel(st)}</span></div>${x.note?`<div class="small" style="margin-top:7px">${esc(x.note)}</div>`:''}<div class="historyActions">${tribunalActionButtons(x)}</div></div>`}).join('');
 }
 function renderSignature(){if(state.signature){signatureInput.value=state.signature.name;signatureState.innerHTML=`<span class="stamp">SIGNÉ</span> &nbsp; ${esc(state.signature.name)}, le ${fmt(state.signature.date)}`}else{signatureState.textContent='Contrat non signé.'}}
 function renderHeader(){
   const phase=contractPhase();
-  dayKpi.textContent=phase==='before'?0:(phase==='during'?dayOfOctober():31);
-  lockedDaysKpi.textContent=new Set(state.checkins.map(x=>x.date.slice(0,10))).size;
-  orgasmKpi.textContent=state.checkins.filter(x=>x.orgasm).length;
-  deviationKpi.textContent=state.deviations.length;
-
-  if(phase==='before'){
-    currentCageBadge.textContent='🔓 Libre';
-    currentPlayBadge.textContent='🕊️ Hors contrat';
-    mainStatus.textContent='🔓 LIBRE';
-    statusSub.textContent='Le contrat est en préparation. La mise sous cage ne commence que le 1er octobre à 00 h 00.';
-    sanctionNotice.textContent='Aucune obligation de chasteté avant l’entrée en vigueur du contrat.';
-  }else if(phase==='after'){
-    currentCageBadge.textContent='🔓 Libre';
-    currentPlayBadge.textContent='🏁 Contrat terminé';
-    mainStatus.textContent='🔓 LIBRE';
-    statusSub.textContent='Locktober est terminé. Toute prolongation doit être une nouvelle décision volontaire.';
-    sanctionNotice.textContent='Le contrat d’octobre est clos.';
-  }else{
-    currentCageBadge.textContent='🔒 '+currentCage();
-    currentPlayBadge.textContent=playAllowed()?'🎮 Jeu autorisé':'⛔ Jeu interdit';
-    if(sanctionActive()){
-      const r=sanctionRemaining();
-      mainStatus.textContent='⚖️ SANCTION EN COURS';
-      statusSub.textContent=`Le notaire exécute la sentence. Encore ${r.h} h ${r.m} min à tenir.`;
-      const prefix=state.sanction.flat?esc(state.settings.flatCageName)+' + ':'';
-      sanctionNotice.innerHTML=`<span class="stamp">EN COURS</span> &nbsp; ${prefix}aucun jeu jusqu’au <strong>${fmt(state.sanction.until)}</strong>.`;
-    }else if(state.sanction&&state.sanction.suspended){
-      mainStatus.textContent='🚨 SÉCURITÉ';
-      statusSub.textContent='Le dossier est suspendu. La santé passe avant les petites mises en scène notariales.';
-      sanctionNotice.textContent='Sanction suspendue pour raison de sécurité.';
-    }else{
-      mainStatus.textContent='🔒 EN CAGE';
-      statusSub.textContent=`Jour ${dayOfOctober()}/31. Le notaire conserve l’œil sur la serrure.`;
-      sanctionNotice.textContent='Aucune sanction en cours. Le dossier est, pour le moment, étonnamment correct.';
-    }
+  dayKpi.textContent=phase==='before'?0:(phase==='during'?dayOfOctober():31);lockedDaysKpi.textContent=new Set(state.checkins.map(x=>recordDayKey(x.date))).size;orgasmKpi.textContent=state.checkins.filter(x=>x.orgasm).length;deviationKpi.textContent=state.deviations.filter(x=>!['cancelled','error','acquitted'].includes(deviationStatus(x))).length;const streakEl=document.getElementById('streakKpi');if(streakEl)streakEl.textContent=checkinStreak();
+  if(phase==='before'){currentCageBadge.textContent='🔓 Libre';currentPlayBadge.textContent='🕊️ Hors contrat';mainStatus.textContent='🔓 LIBRE';statusSub.textContent='Le contrat est en préparation. La mise sous cage ne commence que le 1er octobre à 00 h 00.';sanctionNotice.textContent='Aucune obligation de chasteté avant l’entrée en vigueur du contrat.'}
+  else if(phase==='during'){
+    currentCageBadge.textContent='🔒 '+currentCage();currentPlayBadge.textContent=playAllowed()?'🎮 Jeu autorisé':'⛔ Jeu interdit';
+    if(sanctionActive()){const r=sanctionRemaining();mainStatus.textContent='⚖️ SANCTION EN COURS';statusSub.textContent=`Le notaire exécute la sentence. Encore ${r.h} h ${r.m} min à tenir.`;const prefix=state.sanction.flat?esc(state.settings.flatCageName)+' + ':'';sanctionNotice.innerHTML=`<span class="stamp">EN COURS</span> &nbsp; ${prefix}aucun jeu jusqu’au <strong>${fmt(state.sanction.until)}</strong>.`}
+    else if(state.sanction&&state.sanction.suspended){mainStatus.textContent='🚨 SÉCURITÉ';statusSub.textContent='Le dossier est suspendu. La santé passe avant les petites mises en scène notariales.';sanctionNotice.textContent='Sanction suspendue pour raison de sécurité.'}
+    else{mainStatus.textContent='🔒 EN CAGE';statusSub.textContent=`Jour ${dayOfOctober()}/31. Le notaire conserve l’œil sur la serrure.`;sanctionNotice.textContent='Aucune sanction en cours. Le dossier est, pour le moment, étonnamment correct.'}
   }
-
-  const qPool=state.settings.humiliationLevel==='hard'
-    ? ['« Avant octobre, votre petit zizi est encore libre. Profitez-en : lui aussi va découvrir les horaires de bureau. »','« Votre zizi peut jouir. Votre cage, elle, décidera s’il mérite de sortir. »','« Vous avez rédigé vous-même le règlement de votre zizi. Il serait gênant d’être ensuite incapable de le respecter. »','« Un petit zizi sous règlement reste un petit zizi sous règlement, même quand son propriétaire négocie. »']
-    : ['« Avant octobre, vous êtes encore libre. Le registre ouvre bientôt. »','« Votre zizi peut jouir. La cage reste la règle. »','« Le dossier est suivi avec la sévérité nécessaire. »']
-  notaryQuote.textContent=qPool[(state.deviations.length+state.checkins.length)%qPool.length];
+  notaryQuote.textContent='« '+(state.settings.humiliationLevel==='hard'?pickDailyQuote():'Le dossier est suivi avec la sévérité nécessaire.')+' »';
+  renderAudience();renderHomeCompactTimer();renderBackupReminder();
+}
+function hasCheckin(key){return state.checkins.some(x=>recordDayKey(x.date)===key)}
+function checkinStreak(){
+  const start=new Date(2026,9,1);const end=new Date(2026,9,31);let d=new Date();d.setHours(0,0,0,0);if(d<start)return 0;if(d>end)d=end;else if(!hasCheckin(localKeyFromDate(d)))d.setDate(d.getDate()-1);let n=0;while(d>=start){if(hasCheckin(localKeyFromDate(d))){n++;d.setDate(d.getDate()-1)}else break}return n;
+}
+function nextOctoberWednesday(){const n=new Date();n.setHours(12,0,0,0);for(let i=0;i<8;i++){const d=new Date(n);d.setDate(n.getDate()+i);if(d.getFullYear()===2026&&d.getMonth()===9&&d.getDay()===3)return d}return null}
+function renderAudience(){
+  const el=document.getElementById('dailyAudience');if(!el)return;const phase=contractPhase();
+  if(phase==='before'){el.innerHTML='<h3>Audience du jour</h3><p>Le dossier est encore en préparation. Aucun check-in n’est exigible avant le 1er octobre.</p>';return}
+  if(phase!=='during')return;
+  const key=todayKey(),checked=hasCheckin(key),wed=nextOctoberWednesday();const active=state.deviations.filter(x=>deviationStatus(x)==='pending').length;const wedText=wed?(localKeyFromDate(wed)===key?'aujourd’hui':wed.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})):'aucun autre mercredi en octobre';
+  el.innerHTML=`<h3>Audience du jour — jour ${dayOfOctober()}/31</h3><p>Check-in : <strong>${checked?'✓ effectué':'encore attendu'}</strong>, avec délai de grâce jusqu’à 23 h 59. Série actuelle : <strong>${checkinStreak()} jour${checkinStreak()>1?'s':''} sans oubli</strong>.</p><p>Prochain mercredi piscine/nettoyage : <strong>${wedText}</strong>. ${active?`<strong>${active} dossier${active>1?'s':''} disciplinaire${active>1?'s':''} en cours.</strong>`:'Aucune sanction en cours.'}</p>`;
+}
+function renderHomeCompactTimer(){
+  const el=document.getElementById('homeCompactTimer');if(!el)return;const n=new Date(),start=new Date('2026-10-01T00:00:00+02:00'),end=new Date('2026-11-01T00:00:00+01:00');const target=n<start?start:end;const p=splitDuration(target-n);const label=n<start?'avant le début':'avant la clôture';el.innerHTML=`<span class="miniTime"><b>${p.days}</b> j</span><span class="miniTime"><b>${String(p.hours).padStart(2,'0')}</b> h</span><span class="miniTime"><b>${String(p.minutes).padStart(2,'0')}</b> min</span><span class="miniLabel">${label}</span>`;
+}
+function weekBounds(date){const d=new Date(date);d.setHours(12,0,0,0);const day=d.getDay()||7;const mon=new Date(d);mon.setDate(d.getDate()-day+1);const sun=new Date(mon);sun.setDate(mon.getDate()+6);return[mon,sun]}
+function weeklySummaryFor(anchor){
+  const [mon,sun]=weekBounds(anchor);let checkins=0,devs=0,clean=0,pool=0,days=0;for(let d=new Date(mon);d<=sun;d.setDate(d.getDate()+1)){if(d.getFullYear()!==2026||d.getMonth()!==9)continue;days++;const key=localKeyFromDate(d);if(hasCheckin(key))checkins++;if(cleaningDone(key))clean++;if(poolDone(key))pool++;devs+=state.deviations.filter(x=>(x.missedDate||recordDayKey(x.date))===key&&!['cancelled','error','acquitted'].includes(deviationStatus(x))).length}return{mon,sun,checkins,devs,clean,pool,days}}
+function renderWeeklySummary(){
+  const el=document.getElementById('weeklySummary');if(!el)return;const n=new Date();const firstSunday=new Date(2026,9,4,12);if(n<firstSunday){el.innerHTML='<span class="muted">Le premier bilan apparaîtra le dimanche 4 octobre.</span>';return}let anchor=new Date(n);anchor.setHours(12,0,0,0);if(anchor.getDay()!==0)anchor.setDate(anchor.getDate()-(anchor.getDay()||7));if(anchor>new Date(2026,10,1,12))anchor=new Date(2026,10,1,12);const w=weeklySummaryFor(anchor);const comment=w.devs===0&&w.checkins===w.days?'Semaine impeccable. Le petit zizi n’a même pas réussi à créer un dossier disciplinaire.':w.devs===0?'Semaine correcte. Le greffe relève seulement quelques trous administratifs.':`Le greffe compte ${w.devs} incident${w.devs>1?'s':''}. Le zizi avait manifestement besoin de fournir du travail au notaire.`;el.innerHTML=`<div class="small muted">Du ${w.mon.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})} au ${w.sun.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</div><div class="weeklyGrid"><div class="weeklyStat"><b>${w.checkins}</b><span>check-ins</span></div><div class="weeklyStat"><b>${w.devs}</b><span>écarts</span></div><div class="weeklyStat"><b>${w.days}</b><span>jours sous contrat</span></div><div class="weeklyStat"><b>${w.pool}</b><span>piscines</span></div><div class="weeklyStat"><b>${w.clean}</b><span>nettoyages</span></div></div><div class="quote" style="margin-top:12px">« ${esc(comment)} »</div>`;
+}
+function renderBackupReminder(){
+  const last=state.settings.lastExportAt?new Date(state.settings.lastExportAt):new Date(state.createdAt||Date.now());const due=(Date.now()-last.getTime())>=7*86400000;['backupReminderHome','backupReminderSettings'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.classList.toggle('hidden',!due);if(due)el.innerHTML='<strong>📦 Sauvegarde conseillée</strong><br><span class="small">Aucun export JSON depuis au moins 7 jours. Le localStorage peut disparaître après un nettoyage du navigateur.</span><div class="miniActions"><button class="btn small secondary" onclick="exportData()">Exporter maintenant</button></div>'});
 }
 function splitDuration(ms){
   ms=Math.max(0,ms);
@@ -526,30 +575,41 @@ function paintMainTimer(parts){
   });
 }
 function renderTimer(){
-  const title=document.getElementById('primaryTimerTitle');
-  const badge=document.getElementById('timerPhaseBadge');
-  if(!title||!badge) return;
-  const start=new Date('2026-10-01T00:00:00+02:00');
-  // France switches to winter time during October; using explicit +01 at Nov 1 keeps the civil deadline correct.
-  const end=new Date('2026-11-01T00:00:00+01:00');
-  const n=new Date();
-  if(n<start){
-    title.textContent='Temps avant le Locktober';
-    badge.textContent='Préparation';
-    paintMainTimer(splitDuration(start-n));
-  }else if(n<end){
-    title.textContent='Temps restant';
-    badge.textContent='Locktober en cours';
-    paintMainTimer(splitDuration(end-n));
-  }else{
-    title.textContent='Locktober terminé';
-    badge.textContent='Dossier clos';
-    paintMainTimer({days:0,hours:0,minutes:0,seconds:0});
-  }
+  if(contractPhase()==='after'){updatePostContractTimer();return}
+  const title=document.getElementById('primaryTimerTitle');const badge=document.getElementById('timerPhaseBadge');if(!title||!badge)return;const start=new Date('2026-10-01T00:00:00+02:00');const end=new Date('2026-11-01T00:00:00+01:00');const n=new Date();
+  if(n<start){title.textContent='Temps avant le Locktober';badge.textContent='Préparation';paintMainTimer(splitDuration(start-n))}else if(n<end){title.textContent='Temps restant';badge.textContent='Locktober en cours';paintMainTimer(splitDuration(end-n))}else{title.textContent='Locktober terminé';badge.textContent='Dossier clos';paintMainTimer({days:0,hours:0,minutes:0,seconds:0})}
 }
-function renderSettings(){displayName.value=state.settings.displayName;normalCageName.value=state.settings.normalCageName;flatCageName.value=state.settings.flatCageName;humiliationLevel.value=state.settings.humiliationLevel}
-function renderAll(){renderHeader();renderPrep();renderRoutine();renderCalendar();renderRecent();renderLog();renderTribunal();renderSignature();renderSettings();renderTimer()}
-loadTabs();detectMissedCheckins();initAccessGate();setInterval(()=>{detectMissedCheckins();renderAll()},60000);setInterval(renderTimer,1000);renderAll();
+function renderSettings(){if(!document.getElementById('displayName'))return;displayName.value=state.settings.displayName;normalCageName.value=state.settings.normalCageName;flatCageName.value=state.settings.flatCageName;humiliationLevel.value=state.settings.humiliationLevel;const a=document.getElementById('autoLockMinutes');if(a)a.value=String(state.settings.autoLockMinutes??5);const d=document.getElementById('discreetMode');if(d)d.checked=!!state.settings.discreetMode;renderBackupReminder()}
+function activePostContract(){
+  if(!state.activeContractId)return null;const c=(state.contracts||[]).find(x=>x.id===state.activeContractId);if(!c||c.status!=='active')return null;if(new Date()>=new Date(c.endAt)){c.status='completed';c.completedAt=new Date().toISOString();state.activeContractId=null;localStorage.setItem(STORAGE_KEY,JSON.stringify(state));return null}return c;
+}
+function createPostContract(){
+  const days=Number(document.getElementById('newContractDays')?.value);const label=(document.getElementById('newContractLabel')?.value||'').trim();if(!Number.isFinite(days)||days<1||days>3650){alert('Choisis une durée entre 1 et 3650 jours.');return}const start=new Date();const end=new Date(start);end.setDate(end.getDate()+days);const c={id:uuid(),label,durationDays:days,startAt:start.toISOString(),endAt:end.toISOString(),status:'active',createdAt:new Date().toISOString()};const old=activePostContract();if(old){old.status='closed';old.completedAt=new Date().toISOString()}state.contracts=state.contracts||[];state.contracts.push(c);state.activeContractId=c.id;saveState();
+}
+function closePostContract(){const c=activePostContract();if(!c)return;if(!confirm('Clore ce contrat maintenant ?'))return;c.status='closed';c.completedAt=new Date().toISOString();state.activeContractId=null;saveState()}
+function closeOctoberDossier(){state.finalViewed=true;saveState()}
+function octoberFinalStats(){return{checkins:new Set(state.checkins.filter(x=>recordDayKey(x.date).startsWith('2026-10-')).map(x=>recordDayKey(x.date))).size,missed:state.deviations.filter(x=>x.type==='missedCheckin'&&!['cancelled','error','acquitted'].includes(deviationStatus(x))).length,devs:state.deviations.filter(x=>!['cancelled','error','acquitted'].includes(deviationStatus(x))).length,clean:state.cleanings.filter(x=>recordDayKey(x.date).startsWith('2026-10-')).length,pool:(state.poolVisits||[]).filter(x=>recordDayKey(x.date).startsWith('2026-10-')).length}}
+function finalVerdict(){const s=octoberFinalStats();if(s.missed===0&&s.devs===0)return 'Dossier impeccable : aucune comparution utile. Même le zizi a fini par comprendre qu’il n’avait aucun pouvoir de négociation.';if(s.missed<=2)return 'Dossier globalement tenu. Quelques rappels ont été nécessaires, histoire que le zizi ne confonde pas discipline et libre-service.';return 'Dossier mouvementé : Maître Verrou a eu plus de paperasse que prévu. Le zizi aura au moins fourni du travail administratif.'}
+function renderPostOctober(){
+  const home=document.getElementById('tab-home');if(!home)return;const active=activePostContract();
+  if(!state.finalViewed){const s=octoberFinalStats();home.innerHTML=`<div class="card dossierClosed"><div class="eyebrow">1er novembre — clôture</div><h2 style="font-family:Georgia,serif"><span class="stamp">DOSSIER CLOS</span></h2><h3>Locktober 2026 est terminé</h3><div class="weeklyGrid"><div class="weeklyStat"><b>${s.checkins}</b><span>check-ins</span></div><div class="weeklyStat"><b>${s.missed}</b><span>oublis</span></div><div class="weeklyStat"><b>${s.devs}</b><span>écarts retenus</span></div><div class="weeklyStat"><b>${s.pool}</b><span>piscines</span></div><div class="weeklyStat"><b>${s.clean}</b><span>nettoyages</span></div></div><div class="verdict">« ${esc(finalVerdict())} »</div><button class="btn" onclick="closeOctoberDossier()">Classer le dossier et passer aux nouveaux contrats</button></div>`;return}
+  const history=[...(state.contracts||[])].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  home.innerHTML=`<div class="card postHero"><div class="eyebrow">Compteur de chasteté</div>${active?`<div class="postDay" id="postDayNumber">${Math.max(1,Math.floor((Date.now()-new Date(active.startAt))/86400000)+1)}</div><div class="postSub">jour sur ${active.durationDays}${active.label?` — ${esc(active.label)}`:''}</div><div class="postTimer"><div class="timeUnit"><strong id="postDays">00</strong><span>jours</span></div><div class="timeUnit"><strong id="postHours">00</strong><span>heures</span></div><div class="timeUnit"><strong id="postMinutes">00</strong><span>minutes</span></div><div class="timeUnit"><strong id="postSeconds">00</strong><span>secondes</span></div></div><div class="miniActions" style="justify-content:center"><button class="btn danger" onclick="closePostContract()">Clore ce contrat</button></div>`:`<h2 style="font-family:Georgia,serif">Aucun contrat actif</h2><p class="muted">À partir de novembre, le site fonctionne simplement par contrats successifs de X jours.</p><div class="contractForm"><label>Durée du nouveau contrat</label><input id="newContractDays" type="number" min="1" max="3650" value="7"><label style="margin-top:10px">Nom facultatif</label><input id="newContractLabel" type="text" maxlength="80" placeholder="Ex. Contrat de 14 jours"><button class="btn" style="margin-top:12px" onclick="createPostContract()">Démarrer le contrat</button></div>`}</div>${history.length?`<div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Historique des contrats</h3><div class="postHistory">${history.map(c=>`<div class="historyItem"><div class="historyHead"><strong>${esc(c.label||'Contrat de chasteté')}</strong><span class="statusBadge ${c.status==='active'?'pending':'executed'}">${c.status==='active'?'Actif':c.status==='completed'?'Terminé':'Clos'}</span></div><div class="historyMeta">${c.durationDays} jours • début ${fmt(c.startAt)}</div></div>`).join('')}</div></div>`:''}<div class="notice backupReminder hidden" id="backupReminderHome"></div>`;
+  updatePostContractTimer();renderBackupReminder();
+}
+function updatePostContractTimer(){const c=activePostContract();if(!c){if(contractPhase()==='after'&&document.getElementById('postDayNumber'))renderPostOctober();return}const rem=splitDuration(new Date(c.endAt)-new Date());[['postDays',rem.days],['postHours',rem.hours],['postMinutes',rem.minutes],['postSeconds',rem.seconds]].forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=String(v).padStart(2,'0')})}
+function applyPhaseUI(){const after=contractPhase()==='after';document.body.classList.toggle('postOctober',after);const h=document.querySelector('.brand h1'),p=document.querySelector('.brand p');if(h)h.textContent=after?'Compteur de chasteté':'Locktober OS';if(p)p.textContent=after?'Contrats personnels successifs — compteur local et hors ligne.':'Registre personnel de chasteté — étude notariale privée, locale et hors ligne.';if(after){const active=document.querySelector('.tabBtn.active');if(active&&!['home','settings'].includes(active.dataset.tab))document.querySelector('.tabBtn[data-tab="home"]')?.click()}}
+function transformDiscreet(s){return String(s).replace(/Locktober/gi,'Octobre').replace(/Tribunal/gi,'Commission').replace(/zizi/gi,'dossier').replace(/cages?/gi,m=>m.toLowerCase().endsWith('s')?'dispositifs':'dispositif').replace(/chasteté/gi,'suivi privé')}
+function applyDiscreetMode(){
+  const on=!!state.settings.discreetMode;document.body.classList.toggle('discreet',on);document.title=on?'Suivi privé — Étude personnelle':'Locktober OS — Étude notariale personnelle';
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let node;while(node=walker.nextNode()){const parent=node.parentElement;if(!parent||['SCRIPT','STYLE','TEXTAREA'].includes(parent.tagName))continue;if(node.__mvOriginal===undefined)node.__mvOriginal=node.nodeValue;node.nodeValue=on?transformDiscreet(node.__mvOriginal):node.__mvOriginal}
+}
+function renderAll(){
+  applyPhaseUI();
+  if(contractPhase()==='after'){renderPostOctober();renderSettings();applyDiscreetMode();return}
+  renderHeader();renderPrep();renderRoutine();renderCalendar();renderRecent();renderLog();renderTribunal();renderSignature();renderSettings();renderTimer();renderWeeklySummary();applyDiscreetMode();
+}
+loadTabs();detectMissedCheckins();initAccessGate();['pointerdown','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,activityPing,{passive:true}));setInterval(()=>{detectMissedCheckins();const k=localKeyFromDate(new Date());if(k!==lastRenderedDay){lastRenderedDay=k;renderAll()}else if(contractPhase()!=='after')renderAudience();},60000);setInterval(renderTimer,1000);lastRenderedDay=localKeyFromDate(new Date());renderAll();
 </script>
 </body>
 </html>
