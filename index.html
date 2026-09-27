@@ -338,6 +338,23 @@ function markLinesDone(id){
   const item=state.deviations.find(x=>x.id===id);
   if(item){item.linesDone=true;saveState()}
 }
+
+function deleteDeviation(id){
+  const item=state.deviations.find(x=>x.id===id);
+  if(!item)return;
+  const ok=confirm("Annuler cet écart ? Il sera supprimé du dossier et toute sanction directement liée sera annulée.");
+  if(!ok)return;
+
+  state.deviations=state.deviations.filter(x=>x.id!==id);
+
+  // Une sanction classique est créée avec exactement la même date de départ
+  // que l'écart qui l'a déclenchée.
+  if(state.sanction && state.sanction.started===item.date){
+    state.sanction=null;
+  }
+
+  saveState();
+}
 function localKeyFromDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function recordDayKey(iso){const d=new Date(iso);return localKeyFromDate(d)}
 function detectMissedCheckins(){
@@ -432,7 +449,7 @@ function renderTribunal(){
     const status=latest.linesDone
       ? '<p class="sentencePenalty">✅ Les lignes ont été déclarées faites. Le Tribunal consent à ne pas vous donner une gommette.</p>'
       : `<div class="linesPunishment"><strong>${latest.lines} lignes à recopier :</strong><p>« ${lineText} »</p><button class="btn secondary" onclick="markLinesDone('${latest.id}')">J’ai fait mes lignes</button></div>`;
-    box.innerHTML=`<div class="card sentenceCard"><div class="eyebrow">Étape 2 — Sentence</div><h3><span class="stamp">JUGEMENT</span> ${esc(scale.label)}</h3><div class="sentenceText">« ${esc(latest.commentary||'Le Tribunal a statué.')} »</div>${latest.note?`<p><strong>Constat :</strong> ${esc(latest.note)}</p>`:''}${status}</div>`;
+    box.innerHTML=`<div class="card sentenceCard"><div class="eyebrow">Étape 2 — Sentence</div><h3><span class="stamp">JUGEMENT</span> ${esc(scale.label)}</h3><div class="sentenceText">« ${esc(latest.commentary||'Le Tribunal a statué.')} »</div>${latest.note?`<p><strong>Constat :</strong> ${esc(latest.note)}</p>`:''}${status}<div class="miniActions" style="margin-top:14px"><button class="btn ghost small" onclick="deleteDeviation('${latest.id}')">🗑️ Annuler cet écart</button></div></div>`;
     return;
   }
   let statusHtml='';
@@ -444,7 +461,7 @@ function renderTribunal(){
   }else{
     statusHtml='<p class="sentencePenalty">Sentence prononcée. La période de sanction est terminée.</p>';
   }
-  box.innerHTML=`<div class="card sentenceCard"><div class="eyebrow">Étape 2 — Sentence</div><h3><span class="stamp">JUGEMENT</span> ${esc(scale.label)}</h3><div class="sentenceText">« ${esc(latest.commentary||'Le Tribunal a statué.')} »</div>${latest.note?`<p><strong>Confession versée au dossier :</strong> ${esc(latest.note)}</p>`:''}${statusHtml}</div>`;
+  box.innerHTML=`<div class="card sentenceCard"><div class="eyebrow">Étape 2 — Sentence</div><h3><span class="stamp">JUGEMENT</span> ${esc(scale.label)}</h3><div class="sentenceText">« ${esc(latest.commentary||'Le Tribunal a statué.')} »</div>${latest.note?`<p><strong>Confession versée au dossier :</strong> ${esc(latest.note)}</p>`:''}${statusHtml}<div class="miniActions" style="margin-top:14px"><button class="btn ghost small" onclick="deleteDeviation('${latest.id}')">🗑️ Annuler cet écart</button></div></div>`;
 }
 function renderSignature(){if(state.signature){signatureInput.value=state.signature.name;signatureState.innerHTML=`<span class="stamp">SIGNÉ</span> &nbsp; ${esc(state.signature.name)}, le ${fmt(state.signature.date)}`}else{signatureState.textContent='Contrat non signé.'}}
 function renderHeader(){
