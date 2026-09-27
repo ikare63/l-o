@@ -57,9 +57,31 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
 .sentenceCard h3{font-family:Georgia,serif;margin-top:0}.sentenceText{font:italic 1.05rem/1.55 Georgia,'Times New Roman',serif;color:#f1d0c9;padding:12px 14px;border-left:3px solid #c55f59;background:#160e0d;border-radius:10px}.sentencePenalty{margin-top:12px;font-weight:800;color:#ffd0ca}
 @media(max-width:560px){.timeGrid{grid-template-columns:repeat(2,1fr)}.tabsInner{gap:2px}.tabBtn{font-size:.64rem;padding:7px 1px}}
 
+
+.accessGate{position:fixed;inset:0;z-index:9999;background:radial-gradient(circle at top,#21170f,#090807 65%);display:flex;align-items:center;justify-content:center;padding:20px}
+.accessGate.hidden{display:none}
+.accessPanel{width:min(430px,100%);background:linear-gradient(145deg,#1c1711,#100d0a);border:1px solid #554631;border-radius:24px;padding:22px;box-shadow:0 30px 90px rgba(0,0,0,.55);text-align:center}
+.accessPanel .lockIcon{font-size:2.7rem;margin-bottom:6px}.accessPanel h2{font:700 1.65rem Georgia,'Times New Roman',serif;margin:.2rem 0 .45rem}.accessPanel p{color:#c7b9a5;line-height:1.45}.accessPanel input{font-size:1.35rem;letter-spacing:.18em;text-align:center;margin-top:8px}.accessError{min-height:1.3em;margin:8px 0;color:#f0aaa3;font-weight:700}.accessNote{font-size:.78rem;color:#8f8272;margin-top:12px}
+.codeBox{margin-top:18px;padding-top:16px;border-top:1px solid #342b21}
+.linesPunishment{margin-top:12px;padding:14px;background:#120e0c;border:1px solid #663631;border-radius:12px}.linesPunishment strong{color:#ffc0b9}
+
 </style>
 </head>
 <body>
+
+<div class="accessGate" id="accessGate">
+  <div class="accessPanel">
+    <div class="lockIcon">🔐</div>
+    <div class="eyebrow">Étude privée</div>
+    <h2>Accès au dossier Locktober</h2>
+    <p>Maître Verrou ne laisse pas n’importe qui consulter le dossier de votre petit zizi.</p>
+    <input id="accessCodeInput" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Code d’accès">
+    <div class="accessError" id="accessError"></div>
+    <button class="btn full" onclick="tryUnlockSite()">Ouvrir le dossier</button>
+    <div class="accessNote">Verrou local d’interface : utile contre les regards indiscrets, mais pas une authentification serveur sur GitHub Pages.</div>
+  </div>
+</div>
+
 <div class="app">
 <header><div class="brand"><h1>Locktober OS</h1><p>Registre personnel de chasteté — étude notariale privée, locale et hors ligne.</p></div><div class="seal">ÉTUDE<br>PRIVÉE<br>2026</div></header>
 <section class="tab active" id="tab-home">
@@ -87,7 +109,7 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
       <div>
         <div class="eyebrow">Le notaire arbitre</div>
         <h3>Maître Verrou</h3>
-        <div class="quote" id="notaryQuote">« Votre pénis peut jouir. Il n’a simplement pas à croire qu’il mérite la liberté. »</div>
+        <div class="quote" id="notaryQuote">« Votre zizi peut jouir. Qu’il n’aille surtout pas s’imaginer que ça lui donne droit à la liberté. »</div>
         <div class="statusLine" style="margin-top:10px"><span class="badge" id="currentCageBadge">🔓 Libre</span><span class="badge" id="currentPlayBadge">🕊️ Hors contrat</span></div>
       </div>
     </div>
@@ -117,7 +139,7 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
     <h4>Article 10 — Barème des sanctions</h4><p>Les sanctions sont graduées selon la nature de l’écart constaté. Le retrait pour santé, hygiène, piscine ou sécurité n’est jamais sanctionné.</p>
     <h4>Article 11 — Sécurité</h4><p>La cage doit être retirée immédiatement en cas de douleur importante ou persistante, engourdissement, perte de sensibilité, changement inhabituel de couleur, froideur anormale, gonflement important, saignement, blessure, irritation importante, difficulté à uriner ou problème mécanique inquiétant.</p>
     <h4>Article 12 — Consentement</h4><p>Le contrat peut être modifié, suspendu ou arrêté à tout moment. Le retrait du consentement n’est jamais une faute.</p>
-    <div class="rule"></div><p class="center"><strong>Son pénis peut connaître l’orgasme. Il ne connaîtra pas nécessairement la liberté.</strong></p>
+    <div class="rule"></div><p class="center"><strong>Son zizi peut connaître l’orgasme. Il ne connaîtra pas nécessairement la liberté.</strong></p>
     <div style="margin-top:24px"><label for="signatureInput">Signature personnelle</label><input id="signatureInput" type="text" placeholder="Lénaïc"><div class="miniActions" style="margin-top:10px"><button class="btn secondary" onclick="signContract()">Signer</button><button class="btn ghost" onclick="clearSignature()">Effacer la signature</button></div><p id="signatureState" class="small muted"></p></div>
   </div>
 </section>
@@ -132,7 +154,7 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
     <h3 style="font-family:Georgia,serif">Avouez ce que vous avez fait.</h3>
     <label for="confType">Nature de l’écart</label>
     <select id="confType">
-      <option value="tamper">Manipulation / contournement de la cage</option>
+      <option value="missedCheckin">Check-in quotidien oublié</option><option value="tamper">Manipulation / contournement de la cage</option>
       <option value="lateRelock">Remise en cage volontairement retardée après piscine / hygiène</option>
       <option value="briefRemoval">Retrait non autorisé bref, sans jouer</option>
       <option value="outsideTouch">Stimulation / masturbation hors cage, sans orgasme</option>
@@ -163,7 +185,16 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
 
   <div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Octobre 2026</h3><div class="calendar" id="calendar"></div></div>
 </section>
-<section class="tab" id="tab-settings"><div class="card tabIntro settingsIntro"><h2>⚙️ Réglages</h2><p>Identité du dossier, noms des cages, ton du notaire et sauvegardes locales.</p></div><div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Réglages</h3><label>Nom affiché</label><input id="displayName" type="text" value="Lénaïc"><label style="margin-top:12px">Nom de la cage normale</label><input id="normalCageName" type="text" value="Cage normale"><label style="margin-top:12px">Nom de la flat cage</label><input id="flatCageName" type="text" value="Flat cage"><label style="margin-top:12px">Mode notaire humiliant</label><select id="humiliationLevel"><option value="soft">Appuyé</option><option value="hard">Très humiliant</option></select><div class="miniActions" style="margin-top:12px"><button class="btn" onclick="saveSettings()">Enregistrer</button></div></div><div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Données locales</h3><div class="miniActions"><button class="btn secondary" onclick="exportData()">Exporter JSON</button><label class="btn ghost" style="display:inline-block">Importer JSON<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"></label><button class="btn danger" onclick="resetAll()">Tout effacer</button></div></div></section>
+<section class="tab" id="tab-settings"><div class="card tabIntro settingsIntro"><h2>⚙️ Réglages</h2><p>Identité du dossier, noms des cages, ton du notaire et sauvegardes locales.</p></div><div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Réglages</h3><label>Nom affiché</label><input id="displayName" type="text" value="Lénaïc"><label style="margin-top:12px">Nom de la cage normale</label><input id="normalCageName" type="text" value="Cage normale"><label style="margin-top:12px">Nom de la flat cage</label><input id="flatCageName" type="text" value="Flat cage"><label style="margin-top:12px">Mode notaire humiliant</label><select id="humiliationLevel"><option value="soft">Appuyé</option><option value="hard">Très humiliant</option></select>
+<div class="codeBox">
+  <h4 style="font-family:Georgia,serif;margin:.2rem 0 .5rem">Code d’accès local</h4>
+  <p class="small muted">Le changement vaut sur ce navigateur/appareil. Sur un dépôt GitHub Pages public, cela ne remplace pas une vraie authentification.</p>
+  <label>Nouveau code</label><input id="newAccessCode" type="password" inputmode="numeric" maxlength="12" placeholder="4 à 12 chiffres">
+  <label style="margin-top:10px">Confirmer</label><input id="confirmAccessCode" type="password" inputmode="numeric" maxlength="12" placeholder="Retaper le code">
+  <button class="btn secondary" style="margin-top:10px" onclick="changeAccessCode()">Modifier le code</button>
+  <div class="small muted" id="accessCodeState" style="margin-top:8px"></div>
+</div>
+<div class="miniActions" style="margin-top:12px"><button class="btn" onclick="saveSettings()">Enregistrer</button></div></div><div class="card"><h3 style="font-family:Georgia,serif;margin-top:0">Données locales</h3><div class="miniActions"><button class="btn secondary" onclick="exportData()">Exporter JSON</button><label class="btn ghost" style="display:inline-block">Importer JSON<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"></label><button class="btn danger" onclick="resetAll()">Tout effacer</button></div></div></section>
 </div>
 <nav class="tabs"><div class="tabsInner">
   <button class="tabBtn active" data-tab="home"><span>🏠</span>Accueil</button>
@@ -177,8 +208,12 @@ section.tab{display:none;margin-top:16px}section.tab.active{display:block}.tabs{
 <div class="modal" id="safetyModal"><div class="sheet"><h2>🚨 Retrait de sécurité</h2><p class="muted">Le notaire se retire immédiatement du débat dès qu’il s’agit de circulation sanguine.</p><label>Motif</label><select id="safetyReason"><option>Douleur importante ou persistante</option><option>Engourdissement / perte de sensibilité</option><option>Changement de couleur / froideur</option><option>Gonflement important</option><option>Saignement / blessure / irritation</option><option>Difficulté à uriner</option><option>Problème mécanique</option><option>Autre raison de sécurité</option></select><label style="margin-top:12px">Note</label><textarea id="safetyNote" placeholder="Facultatif"></textarea><div class="rowActions"><button class="btn danger" onclick="saveSafety()">Enregistrer</button><button class="btn ghost" onclick="closeModal('safetyModal')">Annuler</button></div></div></div>
 <script>
 const STORAGE_KEY='locktober-os-v3';
+const ACCESS_HASH_KEY='locktober-access-hash';
+const ACCESS_SESSION_KEY='locktober-access-unlocked';
+const DEFAULT_ACCESS_HASH='d880a973';
 const defaultState={signature:null,prep:{shave:null,cageCleanedPrep:false,keyChecked:false,skinOk:false},checkins:[],deviations:[],safety:[],cleanings:[],sanction:null,settings:{displayName:'Lénaïc',normalCageName:'Cage normale',flatCageName:'Flat cage',humiliationLevel:'hard'}};
 const SANCTION_SCALE={
+  missedCheckin:{label:'Check-in quotidien oublié',flat:false,hours:0,noPlay:0,text:'Lignes humiliantes : « Je n’oublierai pas mon check-in quotidien. »'},
   tamper:{label:'Manipulation / contournement de la cage',flat:false,hours:12,noPlay:12,text:'12 h sans jeu + confession au dossier.'},
   lateRelock:{label:'Remise en cage volontairement retardée',flat:true,hours:12,noPlay:12,text:'12 h en flat cage + 12 h sans jeu.'},
   briefRemoval:{label:'Retrait non autorisé bref',flat:true,hours:24,noPlay:24,text:'24 h en flat cage + 24 h sans jeu.'},
@@ -189,7 +224,43 @@ const SANCTION_SCALE={
 };
 let state=loadState();
 function clone(o){return JSON.parse(JSON.stringify(o));}
+
+function accessHash(value){let h=2166136261;for(const ch of String(value)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return ('00000000'+(h>>>0).toString(16)).slice(-8)}
+function currentAccessHash(){return localStorage.getItem(ACCESS_HASH_KEY)||DEFAULT_ACCESS_HASH}
+function initAccessGate(){
+  const gate=document.getElementById('accessGate');
+  if(!gate)return;
+  if(sessionStorage.getItem(ACCESS_SESSION_KEY)==='1'){gate.classList.add('hidden');return}
+  gate.classList.remove('hidden');
+  setTimeout(()=>document.getElementById('accessCodeInput')?.focus(),50);
+}
+function tryUnlockSite(){
+  const input=document.getElementById('accessCodeInput');
+  const err=document.getElementById('accessError');
+  const code=(input?.value||'').trim();
+  if(accessHash(code)===currentAccessHash()){
+    sessionStorage.setItem(ACCESS_SESSION_KEY,'1');
+    document.getElementById('accessGate')?.classList.add('hidden');
+    if(input)input.value='';
+    if(err)err.textContent='';
+  }else{
+    if(err)err.textContent='Code refusé. Maître Verrou garde le dossier fermé.';
+    if(input){input.value='';input.focus()}
+  }
+}
+function changeAccessCode(){
+  const a=(document.getElementById('newAccessCode')?.value||'').trim();
+  const b=(document.getElementById('confirmAccessCode')?.value||'').trim();
+  const stateEl=document.getElementById('accessCodeState');
+  if(!/^\d{4,12}$/.test(a)){if(stateEl)stateEl.textContent='Choisis un code de 4 à 12 chiffres.';return}
+  if(a!==b){if(stateEl)stateEl.textContent='Les deux codes ne correspondent pas.';return}
+  localStorage.setItem(ACCESS_HASH_KEY,accessHash(a));
+  if(stateEl)stateEl.textContent='Code modifié sur cet appareil.';
+  document.getElementById('newAccessCode').value='';document.getElementById('confirmAccessCode').value='';
+}
+
 function mergeDefaults(src,defs){for(const k in defs){if(defs[k]&&typeof defs[k]==='object'&&!Array.isArray(defs[k]))src[k]=mergeDefaults(src[k]||{},defs[k]);else if(!(k in src))src[k]=defs[k]}return src}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!document.getElementById('accessGate')?.classList.contains('hidden'))tryUnlockSite()});
 function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);return raw?mergeDefaults(JSON.parse(raw),clone(defaultState)):clone(defaultState)}catch(e){return clone(defaultState)}}
 function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));renderAll()}
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -216,15 +287,17 @@ function saveCheckin(){const item={id:crypto.randomUUID(),date:new Date().toISOS
 function notaryTextFor(type){
   const hard=state.settings.humiliationLevel==='hard';
   const hardMap={
-    tamper:'Le Tribunal constate que Monsieur a tenté de négocier avec une cage qui, contrairement à lui, sait parfaitement à quoi elle sert.',
-    lateRelock:'Monsieur avait une autorisation temporaire de sortie et a déjà trouvé le moyen de la transformer en rallonge. Une performance administrative assez médiocre.',
-    briefRemoval:'Retrait sans motif : Monsieur aura donc profité de quelques instants de liberté pour gagner une journée à se rappeler qu’elle n’était pas prévue.',
-    outsideTouch:'Monsieur a voulu jouer hors cage sans aller jusqu’au bout. Le Tribunal salue cette demi-mesure en lui accordant une sanction qui, elle, sera entière.',
-    outsideOrgasm:'Monsieur a obtenu exactement ce que le règlement lui interdisait : un orgasme hors cage. Le dossier retient une capitulation complète devant sa propre excitation.',
-    dishonesty:'Tricher était déjà peu glorieux ; tenter ensuite de maquiller le dossier ajoute une couche de ridicule dont le Tribunal prend soigneusement acte.',
-    repeat:'Récidive. Le Tribunal constate que la première leçon n’a manifestement pas trouvé beaucoup de place entre l’envie et le cadenas.'
+    missedCheckin:'Monsieur pense suffisamment à son petit zizi pour organiser tout un Locktober, mais pas assez à son cerveau pour remplir un check-in de trente secondes. Le Tribunal prescrira donc des lignes, niveau école primaire.',
+    tamper:'Monsieur a tripoté sa cage pour essayer de gratter un peu de liberté à son petit zizi. Le cadenas, lui, a mieux compris le règlement.',
+    lateRelock:'Une sortie temporaire avait été autorisée, et Monsieur a déjà essayé d’en faire des vacances pour son zizi. Médiocre négociation : la cage gagne.',
+    briefRemoval:'Monsieur a sorti son zizi sans motif valable. Quelques minutes de liberté lui rapportent maintenant beaucoup plus longtemps à méditer sous sanction.',
+    outsideTouch:'Monsieur a voulu jouer avec son zizi hors cage sans aller jusqu’au bout. Même sa désobéissance manque de discipline ; la sanction, elle, sera complète.',
+    outsideOrgasm:'Monsieur a préféré obéir à son zizi plutôt qu’au règlement qu’il avait lui-même signé. Le Tribunal prend acte de cette capitulation particulièrement peu glorieuse.',
+    dishonesty:'Désobéir était déjà ridicule ; maquiller ensuite le dossier revient à demander au notaire de souligner le ridicule en rouge.',
+    repeat:'Récidive. Votre petit zizi semble avoir davantage d’autorité sur vous que votre propre signature. Le Tribunal va donc simplifier la hiérarchie.'
   };
   const softMap={
+    missedCheckin:'Check-in oublié. Une sanction écrite s’applique.',
     tamper:'Contournement volontaire constaté. Le rappel au règlement s’applique.',
     lateRelock:'Remise en cage retardée sans motif valable. Sanction légère appliquée.',
     briefRemoval:'Retrait non autorisé constaté. Sanction de niveau intermédiaire.',
@@ -235,11 +308,24 @@ function notaryTextFor(type){
   };
   return (hard?hardMap:softMap)[type]||'Le Tribunal a statué.';
 }
+function lineCountForMissedCheckin(){
+  const previous=state.deviations.filter(x=>x.type==='missedCheckin').length;
+  return Math.min(60,20*(previous+1));
+}
 function submitConfession(){
   const type=document.getElementById('confType').value;
   const note=document.getElementById('confNote').value.trim();
   const scale=SANCTION_SCALE[type];
   const start=new Date();
+  if(type==='missedCheckin'){
+    const lines=lineCountForMissedCheckin();
+    const item={id:crypto.randomUUID(),date:start.toISOString(),type,note,hours:0,flat:false,lines,linesDone:false,commentary:notaryTextFor(type)};
+    state.deviations.push(item);
+    saveState();
+    document.getElementById('confNote').value='';
+    renderTribunal();
+    return;
+  }
   const until=new Date(start.getTime()+scale.hours*3600000);
   const item={id:crypto.randomUUID(),date:start.toISOString(),type,note,hours:scale.hours,flat:scale.flat,commentary:notaryTextFor(type)};
   state.deviations.push(item);
@@ -247,6 +333,34 @@ function submitConfession(){
   saveState();
   document.getElementById('confNote').value='';
   renderTribunal();
+}
+function markLinesDone(id){
+  const item=state.deviations.find(x=>x.id===id);
+  if(item){item.linesDone=true;saveState()}
+}
+function localKeyFromDate(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function recordDayKey(iso){const d=new Date(iso);return localKeyFromDate(d)}
+function detectMissedCheckins(){
+  const start=new Date(2026,9,1,0,0,0);
+  const end=new Date(2026,10,1,0,0,0);
+  const now=new Date();
+  if(now<=start)return false;
+  const last=new Date(Math.min(now.getTime(),end.getTime()));
+  last.setHours(0,0,0,0);
+  let changed=false;
+  for(let d=new Date(start);d<last;d.setDate(d.getDate()+1)){
+    const key=localKeyFromDate(d);
+    const hasCheckin=state.checkins.some(x=>recordDayKey(x.date)===key);
+    const already=state.deviations.some(x=>x.type==='missedCheckin'&&x.missedDate===key);
+    if(!hasCheckin&&!already){
+      const previous=state.deviations.filter(x=>x.type==='missedCheckin').length;
+      const lines=Math.min(60,20*(previous+1));
+      state.deviations.push({id:crypto.randomUUID(),date:new Date().toISOString(),missedDate:key,type:'missedCheckin',note:`Aucun check-in enregistré pour le ${key}.`,hours:0,flat:false,lines,linesDone:false,commentary:notaryTextFor('missedCheckin')});
+      changed=true;
+    }
+  }
+  if(changed)localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+  return changed;
 }
 function saveSafety(){const item={id:crypto.randomUUID(),date:new Date().toISOString(),reason:safetyReason.value,note:safetyNote.value.trim()};state.safety.push(item);if(state.sanction)state.sanction.suspended=true;saveState();safetyNote.value='';closeModal('safetyModal')}
 function saveSettings(){state.settings.displayName=displayName.value.trim()||'Lénaïc';state.settings.normalCageName=normalCageName.value.trim()||'Cage normale';state.settings.flatCageName=flatCageName.value.trim()||'Flat cage';state.settings.humiliationLevel=humiliationLevel.value;saveState()}
@@ -313,6 +427,14 @@ function renderTribunal(){
   const latest=[...state.deviations].sort((a,b)=>new Date(b.date)-new Date(a.date))[0];
   if(!latest){box.innerHTML='';return}
   const scale=SANCTION_SCALE[latest.type];
+  if(latest.type==='missedCheckin'){
+    const lineText='Je n’oublierai pas mon check-in quotidien.';
+    const status=latest.linesDone
+      ? '<p class="sentencePenalty">✅ Les lignes ont été déclarées faites. Le Tribunal consent à ne pas vous donner une gommette.</p>'
+      : `<div class="linesPunishment"><strong>${latest.lines} lignes à recopier :</strong><p>« ${lineText} »</p><button class="btn secondary" onclick="markLinesDone('${latest.id}')">J’ai fait mes lignes</button></div>`;
+    box.innerHTML=`<div class="card sentenceCard"><div class="eyebrow">Étape 2 — Sentence</div><h3><span class="stamp">JUGEMENT</span> ${esc(scale.label)}</h3><div class="sentenceText">« ${esc(latest.commentary||'Le Tribunal a statué.')} »</div>${latest.note?`<p><strong>Constat :</strong> ${esc(latest.note)}</p>`:''}${status}</div>`;
+    return;
+  }
   let statusHtml='';
   if(sanctionActive()){
     const r=sanctionRemaining();
@@ -365,8 +487,8 @@ function renderHeader(){
   }
 
   const qPool=state.settings.humiliationLevel==='hard'
-    ? ['« Avant octobre, vous êtes encore libre. Profitez-en, le registre ouvre bientôt. »','« Votre sexe peut jouir. Votre cage, elle, décidera du décor à partir du 1er octobre. »','« Si vous vouliez rester libre en octobre, il fallait peut-être écrire un autre contrat. »','« Le dossier n’est pas encore ouvert. Monsieur est donc libre… provisoirement. »']
-    : ['« Le contrat n’entre en vigueur que le 1er octobre. »','« Pour l’instant, vous êtes libre. »','« Le dossier est en préparation. »'];
+    ? ['« Avant octobre, votre petit zizi est encore libre. Profitez-en : lui aussi va découvrir les horaires de bureau. »','« Votre zizi peut jouir. Votre cage, elle, décidera s’il mérite de sortir. »','« Vous avez rédigé vous-même le règlement de votre zizi. Il serait gênant d’être ensuite incapable de le respecter. »','« Un petit zizi sous règlement reste un petit zizi sous règlement, même quand son propriétaire négocie. »']
+    : ['« Avant octobre, vous êtes encore libre. Le registre ouvre bientôt. »','« Votre zizi peut jouir. La cage reste la règle. »','« Le dossier est suivi avec la sévérité nécessaire. »']
   notaryQuote.textContent=qPool[(state.deviations.length+state.checkins.length)%qPool.length];
 }
 function splitDuration(ms){
@@ -410,7 +532,7 @@ function renderTimer(){
 }
 function renderSettings(){displayName.value=state.settings.displayName;normalCageName.value=state.settings.normalCageName;flatCageName.value=state.settings.flatCageName;humiliationLevel.value=state.settings.humiliationLevel}
 function renderAll(){renderHeader();renderPrep();renderRoutine();renderCalendar();renderRecent();renderLog();renderTribunal();renderSignature();renderSettings();renderTimer()}
-loadTabs();setInterval(renderAll,60000);setInterval(renderTimer,1000);renderAll();
+loadTabs();detectMissedCheckins();initAccessGate();setInterval(()=>{detectMissedCheckins();renderAll()},60000);setInterval(renderTimer,1000);renderAll();
 </script>
 </body>
 </html>
